@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.impl.ClaimsHolder;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.mjf.recipe.AuthenticationService.dtos.UserDTO;
 import com.mjf.recipe.AuthenticationService.services.UserService;
@@ -15,7 +14,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.Date;
 
 @RequiredArgsConstructor
 @Component
@@ -35,6 +36,7 @@ public class UserAuthenticationProvider {
         Date now = new Date();
         Date validity = new Date(now.getTime() + 3600000); // 1 hour
 
+        //TODO consider changing to RSA256 asymmetric encryption for public key verification
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         return JWT.create()
                 .withSubject(user.getLogin())
