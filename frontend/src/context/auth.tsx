@@ -1,8 +1,8 @@
 import { createContext, useState, ReactNode } from "react";
 import type LoginDetails from "../types/loginDetails";
-import type { UserDetails } from "../types/userDetails";
+import type UserDetails from "../types/userDetails";
+import SignUpDetails from "../types/signUpDetails";
 import axios from "axios";
-import { SignUpDetails } from "../types/signUpDetails";
 
 export interface AuthContextType {
     userLogin: UserDetails | null;

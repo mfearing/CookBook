@@ -1,4 +1,4 @@
-export interface UserDetails{
+export default interface UserDetails{
     firstName: string,
     lastName: string,
     login: string,

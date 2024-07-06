@@ -14,7 +14,7 @@ export default function HomePage(){
         </div>);
     } else {
         content = (<div>
-                <h3>Welcome {userLogin.firstName}</h3>
+                <h3>Welcome to the Home Page, {userLogin.firstName}!</h3>
             </div>);
     }
 

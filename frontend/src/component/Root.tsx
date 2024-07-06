@@ -1,7 +1,7 @@
 import { Container, Typography, Box } from '@mui/material';
-import Copyright from './Copyright';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
+import Footer from './Footer';
 
 export default function Root() {
 
@@ -15,9 +15,7 @@ export default function Root() {
         <Box>
           <Outlet />
         </Box>
-        <Box>
-          <Copyright />
-        </Box>
+        <Footer />
       </Container>
   );
 }

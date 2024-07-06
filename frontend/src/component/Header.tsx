@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
-import { AppBar, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Button, Container, Box, IconButton, 
+        Menu, Toolbar, Tooltip, Avatar, 
+        MenuItem,
+        Typography} from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import useAuthContext from '../hooks/use-auth-context';
@@ -15,54 +17,107 @@ export default function Header(){
 
     const navigate = useNavigate();
     const [anchorElMenu, setAnchorElMenu] = useState<null | HTMLElement>(null);
-    const menuIsOpen = Boolean(anchorElMenu);
-    const menuItemList = [
-        {label: 'Home', path: "/"}, 
-        {label: 'Search Recipes', path: ""}, 
-        {label: 'Create Recipes', path: ""}
-    ];
 
     const handleLoginBtnClick = () => {
         if(userLogin !== null){
             logUserOut();
         } 
         navigate(`/login`);
+        setAnchorElMenu(null);
     };
 
-    const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleCloseMenu = () => {
+        setAnchorElMenu(null);
+    }
+
+    const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElMenu(event.currentTarget); //places the menu items below the menu element
     }
 
     const handleMenuItemClick = (path: string) => {
-        setAnchorElMenu(null);
         navigate(path);
     }
 
-    const renderedMenuItems = menuItemList.map(({label, path}) => {
-        return (<MenuItem key={label} onClick={() => handleMenuItemClick(path)}>{label}</MenuItem>);
+    const menuItems = [
+        {label: 'Log Out', action: handleLoginBtnClick}
+    ];
+    const navigationList = [
+        {label: 'Home', path: "/"}, 
+        {label: 'Search Recipes', path: "/searchRecipes"}, 
+        {label: 'Create Recipes', path: "/createRecipes"}
+    ];
+
+    const renderedButtons = navigationList.map(({label, path}) => {
+        return (
+            <Button 
+                key={label} 
+                onClick={() => handleMenuItemClick(path)}
+                sx={{my: 2, color: 'white', display: 'block'}}
+            >
+                {label}
+            </Button>
+        );
     });
 
-    let loginContent;
-    if(!userLogin){
-        loginContent = <Button color="inherit" onClick={handleLoginBtnClick}>Login</Button>;
+    let userMenuItems;
+    if(userLogin){
+        userMenuItems = menuItems.map((item) => {
+            return (
+                <MenuItem key={item.label} onClick={item.action}>
+                    <Typography textAlign="center">{item.label}</Typography>
+                </MenuItem>
+            );
+        });
     } else {
-        loginContent = <Button color="inherit" onClick={handleLoginBtnClick}>Logout</Button>;
+        userMenuItems = (
+            <MenuItem key={'login'} onClick={handleLoginBtnClick}>
+                <Typography textAlign="center">Log in</Typography>
+            </MenuItem>
+        );
     }
+    
     
     return (
         <AppBar position="static">
-            <Toolbar>
-                <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{mr: 2}} onClick={handleMenuClick}>
-                    <MenuIcon />
-                </IconButton>
-                <Menu id="main-menu" open={menuIsOpen} anchorEl={anchorElMenu} onClose={() => setAnchorElMenu(null)}
-                    MenuListProps={{'aria-labelledby': 'basic-button'}}
-                >
-                    {renderedMenuItems}
-                </Menu>
-                <Typography variant="h6" component="div" sx={{flexGrow: 1}}> CookBook </Typography>
-                {loginContent}
-            </Toolbar>            
+            <Container maxWidth="xl">
+                <Toolbar disableGutters >
+                <Box sx={{flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                    {renderedButtons}
+                </Box>
+
+                <Box sx={{ flexGrow: 0 }}>
+                    <Tooltip title="Open settings">
+                        <IconButton onClick={handleMenuClick} sx={{ p: 0 }}>
+                            <Avatar alt="user" src="" />
+                        </IconButton>
+                    </Tooltip>
+                    <Menu
+                        sx={{mt: '45px'}}
+                        id="menu-appbar"
+                        anchorEl={anchorElMenu}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={Boolean(anchorElMenu)}
+                        onClose={handleCloseMenu}
+                    >
+                        {userMenuItems}
+                    </Menu>
+                    
+
+                </Box>
+
+
+
+
+                </Toolbar>            
+            </Container>
         </AppBar>
     );
 }
