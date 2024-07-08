@@ -1,14 +1,15 @@
 import { AuthContextType } from "../../context/auth";
 import useAuthContext from "../../hooks/use-auth-context";
+import MyRecipesSplashScreen from "./MyRecipesSplashScreen";
 
-export default function CreateRecipesPage(){
+export default function MyRecipesPage(){
     const {userLogin} = useAuthContext() as AuthContextType;
 
     let content;
     if(userLogin && userLogin?.token !== null){
-        content = <div>Welcome to the Create Recipes Page, {userLogin.firstName}!</div>; 
+        content = <div><h3>Welcome to the My Recipes Page, {userLogin.firstName}!</h3></div>; 
     } else {
-        content = <div>Please login to view this content!</div>; //TODO: This should be an entire home page for people that aren't logged in
+        content = <MyRecipesSplashScreen />; //user not logged in, show splash screen
     }
 
     return(

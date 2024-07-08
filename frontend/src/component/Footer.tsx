@@ -1,52 +1,31 @@
-import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
+import { AppBar, Box } from '@mui/material';
 
 function Copyright(){
     return (
-        <Typography variant="body2" color="text.secondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-            Mr. Fearing's Totally Real Copyright
-            </Link>{' '}
-            {new Date().getFullYear()}.
-        </Typography>
+        <Box sx={{ margin: 3 }}>
+            <Typography variant="body2" color="white" align="center" fontSize={18}>
+                {'Copyright © '}
+                <Link color="inherit" href="https://mui.com/">
+                Mr. Fearing's Copyright
+                </Link>{' '}
+                {new Date().getFullYear()}.
+            </Typography>
+        </Box>
+        
     )
 }
 
-const defaultTheme = createTheme();
 
 export default function Footer(){
 
     return (
-        <ThemeProvider theme={defaultTheme}>
-            <Box
-                sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                }}
-            >
-                <CssBaseline />
-                <Box
-                    component="footer"
-                    sx={{
-                        py: 3,
-                        px: 2,
-                        mt: 'auto',
-                        backgroundColor: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.palette.grey[200]
-                            : theme.palette.grey[800],
-                    }}
-                >
-                <Container maxWidth="sm">
-                    <Copyright />
-                </Container>
-                </Box>
-            </Box>
-        </ThemeProvider>
+        <AppBar position="sticky" style={{ bottom: 10 }}>
+            <Container maxWidth="xl">
+                <Copyright />        
+            </Container>
+        </AppBar>
     )
 }

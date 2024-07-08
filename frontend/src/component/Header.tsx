@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { AppBar, Button, Container, Box, IconButton, 
-        Menu, Toolbar, Tooltip, Avatar, 
-        MenuItem,
+        Menu, Toolbar, Tooltip, Avatar, MenuItem,
         Typography} from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -42,20 +41,22 @@ export default function Header(){
         {label: 'Log Out', action: handleLoginBtnClick}
     ];
     const navigationList = [
-        {label: 'Home', path: "/"}, 
-        {label: 'Search Recipes', path: "/searchRecipes"}, 
-        {label: 'Create Recipes', path: "/createRecipes"}
+        {label: 'Home', path: "/", toolTip: "Home Page"}, 
+        {label: 'Search Recipes', path: "/searchRecipes", toolTip: "View Published Recipes"}, 
+        {label: 'My Recipes', path: "/myRecipes", toolTip: "Create Your Own Recipes"}
     ];
 
-    const renderedButtons = navigationList.map(({label, path}) => {
+    const renderedButtons = navigationList.map(({label, path, toolTip}) => {
         return (
-            <Button 
-                key={label} 
-                onClick={() => handleMenuItemClick(path)}
-                sx={{my: 2, color: 'white', display: 'block'}}
-            >
-                {label}
-            </Button>
+            <Tooltip title = {toolTip} arrow>
+                <Button 
+                    key={label} 
+                    onClick={() => handleMenuItemClick(path)}
+                    sx={{my: 2, color: 'white', display: 'block'}}
+                >
+                    {label}
+                </Button>
+            </Tooltip>
         );
     });
 
@@ -78,8 +79,8 @@ export default function Header(){
     
     
     return (
-        <AppBar position="static">
-            <Container maxWidth="xl">
+        <AppBar position="sticky" style={{ top: 10 }} >
+            <Container >
                 <Toolbar disableGutters >
                 <Box sx={{flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                     {renderedButtons}

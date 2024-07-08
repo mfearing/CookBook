@@ -4,7 +4,7 @@ import Root from "./component/Root";
 import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/login/LoginPage";
 import RegisterPage from "./pages/login/RegisterPage";
-import CreateRecipesPage from "./pages/createRecipes/CreateRecipesPage";
+import MyRecipesPage from "./pages/myRecipes/MyRecipesPage";
 
 const router = createBrowserRouter([
   {
@@ -24,8 +24,8 @@ const router = createBrowserRouter([
         element: <RegisterPage />
       },
       {
-        path: "/createRecipes",
-        element: <CreateRecipesPage />
+        path: "/myRecipes",
+        element: <MyRecipesPage />
       }
     ]
   }
