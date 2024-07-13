@@ -31,3 +31,16 @@ services:
       - "8181:8080"
     environment:
       SPRING_PROFILES_ACTIVE: 'production'
+
+  #RecipeApplication
+  recipeservice:
+    build: ./RecipeApplication
+    container_name: recipeapplication
+    depends_on:
+      - broker
+    ports:
+      - "8282:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: 'production'
+      DEVTIRO_KAFKA_TOPIC: 'recipe.published'
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'

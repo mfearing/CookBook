@@ -19,7 +19,7 @@ function AuthProvider({children}: {children: ReactNode}) {
 
     const getAuthByLogin = async (loginDetails: LoginDetails): Promise<UserDetails | void> => {
         try{
-            const response = await axios.post("http://localhost:8080/login", loginDetails);
+            const response = await axios.post("http://localhost:8181/login", loginDetails);
             setUserLogin(response.data);
         } catch (error){
             console.error("Failed to authenticate");
@@ -28,7 +28,7 @@ function AuthProvider({children}: {children: ReactNode}) {
 
     const registerNewLogin = async (signUpDetails: SignUpDetails): Promise<UserDetails | void> => {
         try{
-            const response = await axios.post("http://localhost:8080/register", signUpDetails);
+            const response = await axios.post("http://localhost:8181/register", signUpDetails);
             setUserLogin(response.data);
         } catch(error){
             console.error("Failed to authenticate");
