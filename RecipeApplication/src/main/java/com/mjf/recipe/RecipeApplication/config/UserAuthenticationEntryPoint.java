@@ -2,9 +2,10 @@ package com.mjf.recipe.RecipeApplication.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mjf.recipe.RecipeApplication.dtos.ErrorDTO;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
