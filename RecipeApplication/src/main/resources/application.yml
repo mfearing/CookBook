@@ -1,10 +1,8 @@
-security.jwt.token.secret-key: my-secret-CookBook-key
-
 spring:
   datasource:
     platform: postgres
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/authdb #change from localhost so container doesn't get confused
+    url: jdbc:postgresql://localhost:5432/recipedb #change to ip from localhost so container doesn't get confused
     username: backend
     password: backend
     initialization-mode: always

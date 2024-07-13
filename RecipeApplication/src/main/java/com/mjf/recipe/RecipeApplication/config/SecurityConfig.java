@@ -1,4 +1,4 @@
-package com.mjf.recipe.AuthenticationService.config;
+package com.mjf.recipe.RecipeApplication.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,9 +27,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        //all of these endpoints are non-authenticated, do i even need these to be manually typed out?
-                        .requestMatchers("/login", "/register", "/validate").permitAll()
-                        //.anyRequest().authenticated()
+                        .anyRequest().authenticated() //all requests should be authenticated
                 );
         return http.build();
     }

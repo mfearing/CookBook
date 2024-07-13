@@ -1,4 +1,4 @@
-package com.mjf.recipe.AuthenticationService.config;
+package com.mjf.recipe.RecipeApplication.config;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
