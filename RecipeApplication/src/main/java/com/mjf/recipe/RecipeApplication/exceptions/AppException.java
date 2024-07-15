@@ -1,8 +1,12 @@
 package com.mjf.recipe.RecipeApplication.exceptions;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 
-public class AppException extends RuntimeException {
+/**
+ * Extends AuthenticationException because UserAuthenticationEntryPoint catches and relays the message to the client
+ */
+public class AppException extends AuthenticationException {
     private final HttpStatus status;
 
     public AppException(String message, HttpStatus status){
