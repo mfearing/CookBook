@@ -35,7 +35,7 @@ public class Recipe {
     @Column(name = "instructions")
     private String instructions;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipeId", cascade = CascadeType.ALL)
     private List<RecipeIngredient> recipeIngredients;
 
 }

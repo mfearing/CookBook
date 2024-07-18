@@ -19,7 +19,6 @@ public class IngredientController {
 
     @GetMapping
     public List<Ingredient> getAllIngredients() {
-        logger.info("made it bruh");
         return ingredientService.findAll();
     }
 
