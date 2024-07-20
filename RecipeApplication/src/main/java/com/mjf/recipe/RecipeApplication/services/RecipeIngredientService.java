@@ -45,7 +45,7 @@ public class RecipeIngredientService {
     }
 
     @Transactional
-    public void deleteByRecipeId(Long id){
+    public void deleteAllByRecipeId(Long id){
         recipeIngredientRepository.deleteByRecipeId(id);
     }
 

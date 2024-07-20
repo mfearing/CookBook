@@ -1,18 +1,7 @@
-import { AuthContextType } from "../../context/auth";
-import useAuthContext from "../../hooks/use-auth-context";
-import { Box, Container, Stack, Typography } from "@mui/material";
 
+import { Typography, Box, Container, Stack } from "@mui/material";
 
-export default function HomePage(){
-    const {userLogin} = useAuthContext() as AuthContextType;
-
-    let content;
-    if(!userLogin){
-        content = "Cook Book Home Page";
-    } else {
-        content = `Welcome, ${userLogin.firstName}!`;
-    }
-
+export default function CookBookPage() {
     const hero = (
         <Box id="hero" >
             <Container
@@ -35,10 +24,11 @@ export default function HomePage(){
                             fontSize: 'clamp(3.5rem, 10vw, 4rem)',
                         }}
                     >
-                        {content}
+                        Coming Soon!
                     </Typography>
                     <Typography sx={{ display: 'flex', alignSelf: 'center', textAlign: 'center',}}>
-                        Here, you may search, create, and share your own recipes!
+                        Here, you will be able to search for published recipes, as well as save them to your account and modify them
+                        as you see fit!  Cooking builds communities, and CookBook wants to promote that!
                     </Typography>
 
                 </Stack>

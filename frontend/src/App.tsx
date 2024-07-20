@@ -5,6 +5,7 @@ import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/login/LoginPage";
 import RegisterPage from "./pages/login/RegisterPage";
 import MyRecipesPage from "./pages/myRecipes/MyRecipesPage";
+import CookBookPage from "./pages/cookBook/CookBookPage";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/myRecipes",
         element: <MyRecipesPage />
+      },
+      {
+        path: "/cookBook",
+        element: <CookBookPage />
       }
     ]
   }

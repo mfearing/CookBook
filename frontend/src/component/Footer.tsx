@@ -1,7 +1,6 @@
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
-import { AppBar, Box } from '@mui/material';
+import { AppBar, Box, Toolbar } from '@mui/material';
 
 function Copyright(){
     return (
@@ -13,19 +12,17 @@ function Copyright(){
                 </Link>{' '}
                 {new Date().getFullYear()}.
             </Typography>
-        </Box>
-        
+        </Box>  
     )
 }
-
 
 export default function Footer(){
 
     return (
-        <AppBar position="sticky" style={{ bottom: 10 }}>
-            <Container maxWidth="xl">
+        <AppBar position="fixed" color='primary' sx={{ top: 'auto', bottom: 0 }}>
+            <Toolbar sx={{alignSelf: 'center'}}>
                 <Copyright />        
-            </Container>
+            </Toolbar>
         </AppBar>
     )
 }

@@ -41,9 +41,9 @@ export default function Header(){
         {label: 'Log Out', action: handleLoginBtnClick}
     ];
     const navigationList = [
-        {label: 'Home', path: "/", toolTip: "Home Page"}, 
-        {label: 'Search Recipes', path: "/searchRecipes", toolTip: "View Published Recipes"}, 
-        {label: 'My Recipes', path: "/myRecipes", toolTip: "Create Your Own Recipes"}
+        {label: 'Home', path: "/", toolTip: "Home Page"},  
+        {label: 'My Recipes', path: "/myRecipes", toolTip: "Create Your Own Recipes"},
+        {label: 'CookBook', path: "/cookBook", toolTip: "View Published Recipes"}
     ];
 
     const renderedButtons = navigationList.map(({label, path, toolTip}) => {
@@ -79,40 +79,40 @@ export default function Header(){
     
     
     return (
-        <AppBar position="sticky" style={{ top: 10 }} >
+        <AppBar position="fixed" style={{ top: 0 }} sx={{mx: "auto"}} >
             <Container >
                 <Toolbar disableGutters >
-                <Box sx={{flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                    {renderedButtons}
-                </Box>
+                    <Box sx={{flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                        {renderedButtons}
+                    </Box>
 
-                <Box sx={{ flexGrow: 0 }}>
-                    <Tooltip title="Open settings">
-                        <IconButton onClick={handleMenuClick} sx={{ p: 0 }}>
-                            <Avatar alt="user" src="" />
-                        </IconButton>
-                    </Tooltip>
-                    <Menu
-                        sx={{mt: '45px'}}
-                        id="menu-appbar"
-                        anchorEl={anchorElMenu}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        keepMounted
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        open={Boolean(anchorElMenu)}
-                        onClose={handleCloseMenu}
-                    >
-                        {userMenuItems}
-                    </Menu>
-                    
+                    <Box sx={{ flexGrow: 0 }}>
+                        <Tooltip title="Open settings">
+                            <IconButton onClick={handleMenuClick} sx={{ p: 0 }}>
+                                <Avatar alt="user" src="" />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            sx={{mt: '45px'}}
+                            id="menu-appbar"
+                            anchorEl={anchorElMenu}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElMenu)}
+                            onClose={handleCloseMenu}
+                        >
+                            {userMenuItems}
+                        </Menu>
+                        
 
-                </Box>
+                    </Box>
 
 
 
