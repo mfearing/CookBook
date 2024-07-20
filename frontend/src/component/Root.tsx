@@ -6,9 +6,9 @@ import Footer from './Footer';
 export default function Root() {
 
   return (
-    <Container>
+    <Container maxWidth="lg" >
       <Header />    
-      <Container maxWidth="lg" >
+      <Container sx={{marginTop: 10}} >
         <Outlet />
       </Container>
       <Footer />
