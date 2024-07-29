@@ -15,7 +15,7 @@ export default function MyRecipesSplashScreen() {
                     pb: { xs: 5, sm: 5 }
                 }}
             >
-                <Stack spacing={2} useFlexGap sx={{ width: {xs: '100%', sm: '70%'} }}>
+                <Stack spacing={2} useFlexGap sx={{ width: {xs: '100%'} }}>
                     <Typography
                         variant="h1"
                         sx={{

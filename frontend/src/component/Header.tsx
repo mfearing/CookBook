@@ -79,7 +79,7 @@ export default function Header(){
     
     
     return (
-        <AppBar position="fixed" style={{ top: 0 }} sx={{mx: "auto"}} >
+        <AppBar position="static" style={{ top: 0 }} sx={{mx: "auto"}} >
             <Container >
                 <Toolbar disableGutters >
                     <Box sx={{flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>

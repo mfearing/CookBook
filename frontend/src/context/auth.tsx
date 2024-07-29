@@ -33,11 +33,11 @@ function AuthProvider({children}: {children: ReactNode}) {
         } catch(error){
             console.error("Failed to authenticate");
         }
-    }
+    };
 
     const logUserOut = () => {
         setUserLogin(null);
-    }
+    };
 
     return (
         <AuthContext.Provider value={{userLogin, getAuthByLogin, registerNewLogin, logUserOut}}>
