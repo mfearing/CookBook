@@ -81,14 +81,14 @@ export default function IngredientDataTable(){
             <Box
                 component="form"
                 onSubmit={handleSubmit}
+                justifyContent={"left"}
                 sx={{
                     display: 'flex',
                     flexDirection: 'row',
                     gap: 2,
                     width: '100%',
                     maxWidth: 400,
-                    mx: 'auto',
-                    mt: 4,
+                    mt: 2,
                 }}
             >
                 <FormControl fullWidth>
