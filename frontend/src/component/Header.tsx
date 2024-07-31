@@ -48,9 +48,8 @@ export default function Header(){
 
     const renderedButtons = navigationList.map(({label, path, toolTip}) => {
         return (
-            <Tooltip title = {toolTip} arrow>
+            <Tooltip title = {toolTip} arrow key={label}>
                 <Button 
-                    key={label} 
                     onClick={() => handleMenuItemClick(path)}
                     sx={{my: 2, color: 'white', display: 'block'}}
                 >
@@ -110,13 +109,7 @@ export default function Header(){
                         >
                             {userMenuItems}
                         </Menu>
-                        
-
                     </Box>
-
-
-
-
                 </Toolbar>            
             </Container>
         </AppBar>

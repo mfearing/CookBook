@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, TextField, Button, Grid, CssBaseline } from "@mui/material";
+import { Box, Container, TextField, Button, Grid } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthContext from "../../hooks/use-auth-context";
 import { useState } from "react";
@@ -30,7 +30,6 @@ export default function LoginPage(){
 
     return (
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', }} >
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField margin="normal" value={login} onChange={(e) => setFirstName(e.target.value)}  required fullWidth id="login" label="Login"name="login" autoComplete="login" autoFocus />
