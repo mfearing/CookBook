@@ -6,7 +6,7 @@ import { Grid, IconButton, Tooltip } from "@mui/material";
 import { Delete, Refresh } from "@mui/icons-material";
 
 export default function IngredientDataTable(){
-    const {ingredients, fetchIngredients} = useIngredientContext() as IngredientContextType;
+    const {ingredients, fetchIngredients, deleteIngredient} = useIngredientContext() as IngredientContextType;
 
     useEffect(() => {
         fetchIngredients();
@@ -17,7 +17,7 @@ export default function IngredientDataTable(){
     }
 
     const handleDelete = (id: GridRowId) => {
-        console.log(id);
+        deleteIngredient(id as number);
     }
 
     const columns: GridColDef[] = [
@@ -27,6 +27,7 @@ export default function IngredientDataTable(){
             field: 'delete',
             headerName: ' ',
             sortable: false,
+            disableColumnMenu: true,
             renderCell: (params) => (
                 <Grid container justifyContent="flex-end">
                     <Tooltip title="Delete">
@@ -60,7 +61,7 @@ export default function IngredientDataTable(){
                         paginationModel: {page: 0, pageSize: 5 },
                     },
                 }}
-                pageSizeOptions={[5, 10]}
+                pageSizeOptions={[5, 10, 25]}
             />
         </div>
     )

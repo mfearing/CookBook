@@ -1,4 +1,4 @@
 export default interface IngredientDetails {
-    id: bigint,
+    id: number,
     name: string
 }
