@@ -1,32 +1,32 @@
 import { GridColDef, GridRowId } from "@mui/x-data-grid"
 import { useEffect } from "react";
-import useIngredientContext from "../../../hooks/use-ingredient-context";
-import { IngredientContextType } from "../../../context/ingredient";
+import useUnitContext from "../../../hooks/use-unit-context";
+import { UnitContextType } from "../../../context/unit";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import IngredientDetails from "../../../types/recipe/ingredientDetails";
+import UnitDetails from "../../../types/recipe/unitDetails";
 import DataTable, { DataGridRow } from "./DataTable";
 
-export default function IngredientDataTable(){
-    const {ingredients, fetchIngredients, deleteIngredient, addIngredient} = useIngredientContext() as IngredientContextType;
+export default function UnitDataTable(){
+    const {units, fetchUnits, deleteUnit, addUnit} = useUnitContext() as UnitContextType;
 
     useEffect(() => {
-        fetchIngredients();
-    }, [fetchIngredients]); //memoized method using useCallback() in the ingredient context
+        fetchUnits();
+    }, [fetchUnits]); //memoized method using useCallback() in the unit context
 
     const handleRefresh = () => {
-        fetchIngredients();
+        fetchUnits();
     }
 
     const handleDelete = (id: GridRowId) => {
-        deleteIngredient(id as number);
+        deleteUnit(id as number);
     }
 
-    const handleSubmit = (newIngredient: string) => {
-        const ingredient: IngredientDetails = {
-            name: newIngredient
+    const handleSubmit = (newUnit: string) => {
+        const unit: UnitDetails = {
+            name: newUnit
         };
-        addIngredient(ingredient);
+        addUnit(unit);
     }
 
     const columns: GridColDef[] = [
@@ -50,15 +50,15 @@ export default function IngredientDataTable(){
     ];
 
     let rows: DataGridRow[] = [];
-    if(ingredients !== undefined && ingredients !== null){
-         rows = ingredients.map(ingredient => {
-            return {id: ingredient.id, name: ingredient.name};
+    if(units !== undefined && units !== null){
+         rows = units.map(unit => {
+            return {id: unit.id, name: unit.name};
         });
     } 
     
 
     return (
-        <DataTable rows={rows} columns={columns} handleRefresh={handleRefresh} handleSubmit={handleSubmit} label="Ingredient" >
+        <DataTable rows={rows} columns={columns} handleRefresh={handleRefresh} handleSubmit={handleSubmit} label="Unit" >
 
         </DataTable>
     )

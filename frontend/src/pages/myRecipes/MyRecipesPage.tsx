@@ -1,5 +1,6 @@
 import { AuthContextType } from "../../context/auth";
 import { IngredientProvider } from "../../context/ingredient";
+import { UnitProvider } from "../../context/unit";
 import useAuthContext from "../../hooks/use-auth-context";
 import RecipeLayout from "./components/RecipeLayout";
 import MyRecipesSplashScreen from "./MyRecipesSplashScreen";
@@ -16,7 +17,9 @@ export default function MyRecipesPage(){
 
     return(
         <IngredientProvider>
-            {content}
+            <UnitProvider>
+                {content}
+            </UnitProvider>
         </IngredientProvider>
     );
 

@@ -1,15 +1,12 @@
 import { Grid } from "@mui/material";
 import RecipeNav from "./RecipeNav";
 import { useState } from "react";
-import DataTableLayout from "./DataTableLayout";
+import IngredientDataTable from "./IngredientDataTable";
+import UnitDataTable from "./UnitDataTable";
 
 export interface RecipeNavProps {
     updateNav: (navSetting: string) => void,
     navSetting: string
-}
-
-export interface DataTableLayoutProps {
-    type: string
 }
 
 export default function RecipeLayout(){
@@ -18,13 +15,20 @@ export default function RecipeLayout(){
         setNav(navSetting);
     }
 
+    let content = <>{nav}</>;
+    if(nav === 'ingredient'){
+        content = <IngredientDataTable />;
+    } else if (nav === 'unit'){
+        content = <UnitDataTable />;
+    }
+
     return(
         <Grid container spacing={2}>
             <Grid item xs={2}>
                 <RecipeNav updateNav={handleNavChange} navSetting={nav}  />
             </Grid>
             <Grid item xs={10}>
-            <DataTableLayout type={nav} />
+                {content}
             </Grid>
         </Grid>
     )

@@ -1,7 +1,7 @@
 import type RecipeIngredientDetails from "./recipeIngredientDetails";
 
 export default interface RecipeDetails {
-    id: bigint,
+    id?: number,
     author: string,
     name: string,
     description: string,
