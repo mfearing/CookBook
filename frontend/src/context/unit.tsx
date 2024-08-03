@@ -1,7 +1,6 @@
 import { createContext, useState, ReactNode, useCallback } from "react";
 import type UnitDetails from "../types/recipe/unitDetails";
-import axios from "axios";
-import useAuthContext from "../hooks/use-auth-context";
+import useRecipeApi from "../hooks/use-recipe-api";
 
 export interface UnitContextType {
     units: UnitDetails[] | null,
@@ -14,66 +13,31 @@ const UnitContext = createContext<UnitContextType | null>(null);
 
 function UnitProvider({children}: {children: ReactNode}){
     const [units, setUnits] = useState<UnitDetails[]>([]);
-    const authContext = useAuthContext();
+    const recipeApi = useRecipeApi();
 
     const fetchUnits = useCallback(async(): Promise<void> => {
-        try{
-            const response = await axios.get("http://localhost:8282/unit",{
-                headers: {
-                    'Authorization': `Bearer ${authContext?.userLogin?.token}`
-                }
-            });
-            setUnits(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }, [authContext]);
+        const response = await recipeApi.get("/unit");
+        setUnits(response.data);
+    }, [recipeApi]);
 
     const deleteUnit = async(id: number): Promise<void> => {
-        try {
-            const response = await axios.delete(`http://localhost:8282/unit/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${authContext?.userLogin?.token}`
-                }
+        const response = await recipeApi.delete(`/unit/${id}`);
+        if(response.status === 200){
+            const updatedUnits = units?.filter((unit) => {
+                return unit.id !== id; 
             });
-
-            if(response.status === 200){
-                const updatedUnits = units?.filter((unit) => {
-                    return unit.id !== id; 
-                });
-                setUnits(updatedUnits);
-            }
-        } catch (error){
-            if(error instanceof Error){
-                console.log(error.message);
-            } else {
-                console.log(error);
-            }
-        } 
+            setUnits(updatedUnits);
+        }
     };
 
     const addUnit = async(unit: UnitDetails): Promise<void> => {
-        try{
-            const response = await axios.post(`http://localhost:8282/unit`, unit, {
-                headers: {
-                    'Authorization': `Bearer ${authContext?.userLogin?.token}`
-                }
-            });
-
-            if(response.status === 200){
-                const updatedUnits = [
-                    ...units,
-                    response.data
-                ];
-                setUnits(updatedUnits);
-            }
-
-        } catch(error){
-            if(error instanceof Error){
-                console.log(error.message);
-            } else {
-                console.log(error);
-            }
+        const response = await recipeApi.post(`/unit`, unit);
+        if(response.status === 200){
+            const updatedUnits = [
+                ...units,
+                response.data
+            ];
+            setUnits(updatedUnits);
         }
     }
 
