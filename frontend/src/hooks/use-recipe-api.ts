@@ -17,12 +17,19 @@ export default function useRecipeApi() {
             return config;
         });
 
-        instance.interceptors.response.use((response) => {
-            if(response.status === 401){ //user unauthorized because of bad token
-                authContext?.logUserOut();
+        instance.interceptors.response.use(
+            (response) => {
+                return response;
+            },
+            (error) => {
+                if(error.response && error.response.status === 401){
+                    alert("Your user session has expired, please log in.");
+                    authContext?.logUserOut();
+                }
+                return Promise.reject(error);
             }
-            return response;
-        });
+    
+        );
 
         return instance;
     }, [authContext]);

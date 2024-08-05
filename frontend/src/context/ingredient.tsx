@@ -16,28 +16,40 @@ function IngredientProvider({children}: {children: ReactNode}){
     const recipeApi = useRecipeApi();
 
     const fetchIngredients = useCallback(async(): Promise<void> => { //do i need to have this if the api is using useMemo?
-        const response = await recipeApi.get('/ingredient');
-        setIngredients(response.data);
+        try{
+            const response = await recipeApi.get('/ingredient');
+            setIngredients(response.data);
+        } catch (error) {
+            //console.log(error);
+        }
     }, [recipeApi]); //doesn't actually have a dependency on api, will do infinite loop if added here; add dependency if using authContext directly
 
     const deleteIngredient = async(id: number): Promise<void> => {
-        const response = await recipeApi.delete(`/ingredient/${id}`);
-        if(response.status === 200){
-            const updatedIngredients = ingredients?.filter((ingredient) => {
-                return ingredient.id !== id; 
-            });
-            setIngredients(updatedIngredients);
+        try{
+            const response = await recipeApi.delete(`/ingredient/${id}`);
+            if(response.status === 200){
+                const updatedIngredients = ingredients?.filter((ingredient) => {
+                    return ingredient.id !== id; 
+                });
+                setIngredients(updatedIngredients);
+            }
+        }catch(error){
+            //console.log(error);        
         }
     };
 
     const addIngredient = async(ingredient: IngredientDetails): Promise<void> => {
-        const response = await recipeApi.post(`/ingredient`, ingredient);
-        if(response.status === 200){
-            const updatedIngredients = [
-                ...ingredients,
-                response.data
-            ];
-            setIngredients(updatedIngredients);
+        try{
+            const response = await recipeApi.post(`/ingredient`, ingredient);
+            if(response.status === 200){
+                const updatedIngredients = [
+                    ...ingredients,
+                    response.data
+                ];
+                setIngredients(updatedIngredients);
+            }
+        } catch(error){
+           // console.log(error);
         }
     }
 
