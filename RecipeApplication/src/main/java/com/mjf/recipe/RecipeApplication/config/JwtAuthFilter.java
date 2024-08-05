@@ -1,11 +1,13 @@
 package com.mjf.recipe.RecipeApplication.config;
 
+import com.mjf.recipe.RecipeApplication.exceptions.AppException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,9 +31,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 try{
                     SecurityContextHolder.getContext().setAuthentication(
                             userAuthenticationProvider.validateTokenAndSetAuthentication(authElements[1]));
-                } catch (RuntimeException e) {
+                } catch (RuntimeException | InterruptedException e) {
                     SecurityContextHolder.clearContext();
-                    throw e;
+                    throw new AppException(e.getMessage(), HttpStatus.UNAUTHORIZED);
                 }
             }
         }

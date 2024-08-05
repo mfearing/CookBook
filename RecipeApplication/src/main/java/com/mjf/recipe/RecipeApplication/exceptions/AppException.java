@@ -1,12 +1,10 @@
 package com.mjf.recipe.RecipeApplication.exceptions;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
 
-/**
- * Extends AuthenticationException because UserAuthenticationEntryPoint catches and relays the message to the client
- */
-public class AppException extends AuthenticationException {
+@Getter
+public class AppException extends RuntimeException {
     private final HttpStatus status;
 
     public AppException(String message, HttpStatus status){
@@ -14,7 +12,4 @@ public class AppException extends AuthenticationException {
         this.status = status;
     }
 
-    public HttpStatus getStatus() {
-        return this.status;
-    }
 }
