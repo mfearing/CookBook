@@ -2,10 +2,11 @@ import { GridColDef, GridRowId } from "@mui/x-data-grid"
 import { useEffect } from "react";
 import useIngredientContext from "../../../hooks/use-ingredient-context";
 import { IngredientContextType } from "../../../context/ingredient";
-import { Grid, IconButton, Tooltip } from "@mui/material";
+import { Box, Grid, IconButton, Tooltip } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import IngredientDetails from "../../../types/recipe/ingredientDetails";
 import DataTable, { DataGridRow } from "./DataTable";
+import AddRowForm from "./AddRowForm";
 
 export default function IngredientDataTable(){
     const {ingredients, fetchIngredients, deleteIngredient, addIngredient} = useIngredientContext() as IngredientContextType;
@@ -28,6 +29,7 @@ export default function IngredientDataTable(){
         };
         addIngredient(ingredient);
     }
+    const label = "Ingredient";
 
     const columns: GridColDef[] = [
         {field: 'id', headerName: 'ID', flex: 0, type: 'number', sortable: true},
@@ -58,9 +60,11 @@ export default function IngredientDataTable(){
     
 
     return (
-        <DataTable rows={rows} columns={columns} handleRefresh={handleRefresh} handleSubmit={handleSubmit} label="Ingredient" >
-
-        </DataTable>
+        <Box>
+            <DataTable rows={rows} columns={columns} handleRefresh={handleRefresh} />
+            <br /><br />
+            <AddRowForm handleSubmit={handleSubmit} label={label} />
+        </Box>
     )
 
 }

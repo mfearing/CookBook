@@ -75,6 +75,8 @@ export default function Header(){
             </MenuItem>
         );
     }
+
+    const initials = userLogin?.firstName.charAt(0).concat(userLogin?.lastName.charAt(0));
     
     
     return (
@@ -86,9 +88,9 @@ export default function Header(){
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
+                        <Tooltip title={`${userLogin ? userLogin.firstName : "Log In"}`}>
                             <IconButton onClick={handleMenuClick} sx={{ p: 0 }}>
-                                <Avatar alt="user" src="" />
+                                <Avatar alt="user" src="">{initials}</Avatar>
                             </IconButton>
                         </Tooltip>
                         <Menu

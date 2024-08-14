@@ -3,6 +3,7 @@ import RecipeNav from "./RecipeNav";
 import { useState } from "react";
 import IngredientDataTable from "./IngredientDataTable";
 import UnitDataTable from "./UnitDataTable";
+import RecipeDataTable from "./RecipeDataTable";
 
 export interface RecipeNavProps {
     updateNav: (navSetting: string) => void,
@@ -20,6 +21,8 @@ export default function RecipeLayout(){
         content = <IngredientDataTable />;
     } else if (nav === 'unit'){
         content = <UnitDataTable />;
+    } else if (nav === 'recipe'){
+        content = <RecipeDataTable />;
     }
 
     return(

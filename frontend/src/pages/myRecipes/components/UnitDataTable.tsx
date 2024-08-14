@@ -6,6 +6,7 @@ import { Grid, IconButton, Tooltip } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import UnitDetails from "../../../types/recipe/unitDetails";
 import DataTable, { DataGridRow } from "./DataTable";
+import AddRowForm from "./AddRowForm";
 
 export default function UnitDataTable(){
     const {units, fetchUnits, deleteUnit, addUnit} = useUnitContext() as UnitContextType;
@@ -28,6 +29,7 @@ export default function UnitDataTable(){
         };
         addUnit(unit);
     }
+    const label = "Unit";
 
     const columns: GridColDef[] = [
         {field: 'id', headerName: 'ID', flex: 0, type: 'number', sortable: true},
@@ -55,12 +57,13 @@ export default function UnitDataTable(){
             return {id: unit.id, name: unit.name};
         });
     } 
-    
 
     return (
-        <DataTable rows={rows} columns={columns} handleRefresh={handleRefresh} handleSubmit={handleSubmit} label="Unit" >
-
-        </DataTable>
+        <>
+            <DataTable rows={rows} columns={columns} handleRefresh={handleRefresh} />
+            <br /><br />
+            <AddRowForm handleSubmit={handleSubmit} label={label} />
+        </>
     )
 
 }
