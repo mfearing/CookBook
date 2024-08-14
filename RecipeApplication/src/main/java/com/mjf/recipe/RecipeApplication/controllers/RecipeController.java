@@ -2,12 +2,14 @@ package com.mjf.recipe.RecipeApplication.controllers;
 
 import com.mjf.recipe.RecipeApplication.entities.Recipe;
 import com.mjf.recipe.RecipeApplication.entities.RecipeIngredient;
+import com.mjf.recipe.RecipeApplication.exceptions.AppException;
 import com.mjf.recipe.RecipeApplication.services.RecipeIngredientService;
 import com.mjf.recipe.RecipeApplication.services.RecipeService;
 import com.mjf.recipe.RecipeApplication.utils.RecipeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -50,6 +52,30 @@ public class RecipeController {
 
         //return final recipe
         return finalRecipe;
+    }
+
+    @PatchMapping("/{id}")
+    public Recipe updateRecipeDetails(@PathVariable Long id, @RequestBody Recipe recipe){
+        return recipeService.patchRecipeProperties(recipe);
+    }
+
+    @GetMapping("/{id}/ingredients/{recipeIngredientId}")
+    public RecipeIngredient getRecipeIngredient(@PathVariable Long id, @PathVariable Long recipeIngredientId){
+        return recipeIngredientService.findById(recipeIngredientId).orElse(null);
+    }
+
+    @GetMapping("/{id}/ingredients")
+    public List<RecipeIngredient> getRecipeIngredients(@PathVariable Long id){
+        return recipeIngredientService.findByRecipeId(id);
+    }
+
+    @PostMapping("/{id}/ingredients")
+    public List<RecipeIngredient> saveRecipeIngredients(@PathVariable Long id, @RequestBody List<RecipeIngredient> recipeIngredients){
+        if(recipeIngredients.stream().anyMatch(ri -> !id.equals(ri.getRecipeId()))){
+            //should never get here
+            throw new AppException("Missing recipe ID on recipe ingredient", HttpStatus.BAD_REQUEST);
+        }
+        return recipeIngredientService.saveAll(recipeIngredients);
     }
 
     @DeleteMapping("/{id}")

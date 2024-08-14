@@ -1,19 +1,12 @@
 package com.mjf.recipe.RecipeApplication.config;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.mjf.recipe.RecipeApplication.dtos.UserDTO;
 import com.mjf.recipe.RecipeApplication.enums.Role;
 import com.mjf.recipe.RecipeApplication.exceptions.AppException;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,25 +23,9 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @Component
 public class UserAuthenticationProvider {
-    private static final Logger logger = LoggerFactory.getLogger(UserAuthenticationProvider.class);
 
-    @Value("${security.jwt.token.secret-key:secret-key}")
-    private String secretKey;
+    public Authentication validateTokenAndSetAuthentication(String token) throws IOException, InterruptedException {
 
-    @PostConstruct
-    protected void init(){
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-    }
-
-    public DecodedJWT validateToken(String token) throws JWTVerificationException {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        JWTVerifier verifier = JWT.require(algorithm).build();
-        return verifier.verify(token.replace("Bearer ", ""));
-    }
-
-    public Authentication validateTokenAndSetAuthentication(String token) {
-
-        try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("http://10.0.4.58:8181/validate")) //make this configurable
@@ -57,9 +34,7 @@ public class UserAuthenticationProvider {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             JSONObject responseBody = new JSONObject(response.body());
 
-            if(!responseBody.getBoolean("valid")){
-                throw new RuntimeException(responseBody.getString("error"));
-            } else {
+            if(responseBody.getBoolean("valid")){
                 Base64.Decoder decoder = Base64.getUrlDecoder();
                 String[] chunks = token.split("\\.");
                 JSONObject jsonObject = new JSONObject(new String(decoder.decode(chunks[1])));
@@ -71,11 +46,7 @@ public class UserAuthenticationProvider {
                 return new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(user.getRole()));
             }
 
-        } catch (IOException | InterruptedException | RuntimeException e){
-            logger.debug(e.getMessage());
-            throw new AppException(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
-
+            throw new AppException("Unauthorized path", HttpStatus.UNAUTHORIZED);
     }
 
 }
