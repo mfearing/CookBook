@@ -59,9 +59,14 @@ public class RecipeController {
         return recipeService.patchRecipeProperties(recipe);
     }
 
-    @GetMapping("/{id}/ingredients/{ingredientId}")
-    public RecipeIngredient getRecipeIngredient(@PathVariable Long recipeId, @PathVariable Long recipeIngredientId){
+    @GetMapping("/{id}/ingredients/{recipeIngredientId}")
+    public RecipeIngredient getRecipeIngredient(@PathVariable Long id, @PathVariable Long recipeIngredientId){
         return recipeIngredientService.findById(recipeIngredientId).orElse(null);
+    }
+
+    @GetMapping("/{id}/ingredients")
+    public List<RecipeIngredient> getRecipeIngredients(@PathVariable Long id){
+        return recipeIngredientService.findByRecipeId(id);
     }
 
     @PostMapping("/{id}/ingredients")
