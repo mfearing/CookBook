@@ -35,6 +35,10 @@ public class RecipeService {
         return recipeRepository.findByAuthor(author);
     }
 
+    public Optional<Recipe> findByIdAndAuthor(Long id, String author){
+        return recipeRepository.findByIdAndAuthor(id, author);
+    }
+
     @Transactional
     public Recipe save(Recipe recipe){
         return recipeRepository.save(recipe);
