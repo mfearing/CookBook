@@ -7,7 +7,7 @@ export interface InstructionsCardProps {
 export default function InstructionsCard({instructions}: InstructionsCardProps) {
 
     return (
-        <Card>
+        <Card sx={{mt: 2}}>
             <CardHeader
                 title="Instructions"
             />
