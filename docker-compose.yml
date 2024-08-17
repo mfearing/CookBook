@@ -55,5 +55,5 @@ services:
       - "8383:8080"
     environment:
       SPRING_PROFILES_ACTIVE: 'production'
-      DEVITRO_KAFKA_TOPIC: 'recipe.clone'
+      DEVITRO_KAFKA_CLONE_TOPIC: 'recipe.clone'
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
