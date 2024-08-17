@@ -1,0 +1,44 @@
+package com.mjf.recipe.CookBookApplication.config;
+
+import com.mjf.recipe.CookBookApplication.exceptions.AppException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+@RequiredArgsConstructor
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private final UserAuthenticationProvider userAuthenticationProvider;
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse,
+            FilterChain filterChain) throws ServletException, IOException {
+        String header = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if(header != null){
+            String[] authElements = header.split(" ");
+            if(authElements.length == 2 && "Bearer".equals(authElements[0])){
+                try{
+                    SecurityContextHolder.getContext().setAuthentication(
+                            userAuthenticationProvider.validateTokenAndSetAuthentication(authElements[1]));
+                } catch (RuntimeException | InterruptedException e) {
+                    SecurityContextHolder.clearContext();
+                    throw new AppException(e.getMessage(), HttpStatus.UNAUTHORIZED);
+                }
+            }
+        }
+
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
+    }
+
+}
