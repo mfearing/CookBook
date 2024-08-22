@@ -32,12 +32,12 @@ public class PublishedRecipeService {
     }
 
     public List<PublishedRecipeDTO> getPublishedRecipeDTOsByAuthor(String author){
-        List<PublishedRecipe> publishedRecipes = publishedRecipeRepository.findAllByAuthor(author);
+        List<PublishedRecipe> publishedRecipes = publishedRecipeRepository.findByAuthorIgnoreCase(author);
         return publishedRecipes.stream().map(this::mapPublishedRecipeToDTO).toList();
     }
 
     public List<PublishedRecipeDTO> getPublishedRecipeDTOsByNameContaining(String searchTerm){
-        List<PublishedRecipe> publishedRecipes = publishedRecipeRepository.findByNameContaining(searchTerm);
+        List<PublishedRecipe> publishedRecipes = publishedRecipeRepository.findByNameContainingIgnoreCase(searchTerm);
         return publishedRecipes.stream().map(this::mapPublishedRecipeToDTO).toList();
     }
 

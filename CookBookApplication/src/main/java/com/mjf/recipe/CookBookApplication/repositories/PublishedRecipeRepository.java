@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PublishedRecipeRepository extends JpaRepository<PublishedRecipe, Long> {
-    List<PublishedRecipe> findAllByAuthor(String author);
-    List<PublishedRecipe> findByNameContaining(String searchTerm);
+    List<PublishedRecipe> findByAuthorIgnoreCase(String author);
+    List<PublishedRecipe> findByNameContainingIgnoreCase(String searchTerm);
     Optional<PublishedRecipe> findByRecipeId(Long id);
 }

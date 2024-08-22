@@ -66,14 +66,14 @@ public class PublishedRecipeRepositoryTest {
 
     @Test
     public void givenRecipeInDB_WhenFindAllRecipeByAuthor_ThenReturnRecipesByAuthor(){
-        List<PublishedRecipe> recipes = publishedRecipeRepository.findAllByAuthor(RECIPE_AUTHOR1);
-        assertEquals(recipes.size(), 2);
+        List<PublishedRecipe> recipes = publishedRecipeRepository.findByAuthorIgnoreCase(RECIPE_AUTHOR1);
+        assertEquals(2, recipes.size());
 
-        recipes = publishedRecipeRepository.findAllByAuthor(RECIPE_AUTHOR2);
-        assertEquals(recipes.size(), 1);
+        recipes = publishedRecipeRepository.findByAuthorIgnoreCase(RECIPE_AUTHOR2);
+        assertEquals(1, recipes.size());
 
-        recipes = publishedRecipeRepository.findAllByAuthor(RECIPE_AUTHOR3);
-        assertEquals(recipes.size(), 0);
+        recipes = publishedRecipeRepository.findByAuthorIgnoreCase(RECIPE_AUTHOR3);
+        assertEquals(0, recipes.size());
     }
 
 

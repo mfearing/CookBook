@@ -80,14 +80,14 @@ public class PublishedRecipeServiceTest {
     @Test
     public void testGetPublishedRecipeDTOsByAuthor(){
         try {
-            when(repository.findAllByAuthor(PR_AUTHOR)).thenReturn(Collections.singletonList(recipe));
+            when(repository.findByAuthorIgnoreCase(PR_AUTHOR)).thenReturn(Collections.singletonList(recipe));
             when(objectMapper.readValue(recipe.getRecipeData(), Map.class)).thenReturn(new HashMap<>());
 
             List<PublishedRecipeDTO> dtos = service.getPublishedRecipeDTOsByAuthor(PR_AUTHOR);
 
             assertEquals(1, dtos.size());
             assertEquals(PR_ID, dtos.get(0).getId());
-            verify(repository, times(1)).findAllByAuthor(PR_AUTHOR);
+            verify(repository, times(1)).findByAuthorIgnoreCase(PR_AUTHOR);
 
         } catch (JsonProcessingException ignored){
 
@@ -98,7 +98,7 @@ public class PublishedRecipeServiceTest {
     public void testGetPublishedRecipeDTOsByNameContaining(){
         String searchTerm = "uthor";
         try {
-            when(repository.findByNameContaining(searchTerm)).thenReturn(Arrays.asList(recipe, recipe2));
+            when(repository.findByNameContainingIgnoreCase(searchTerm)).thenReturn(Arrays.asList(recipe, recipe2));
             when(objectMapper.readValue(recipe.getRecipeData(), Map.class)).thenReturn(new HashMap<>());
             List<PublishedRecipeDTO> dtos = service.getPublishedRecipeDTOsByNameContaining(searchTerm);
 
@@ -109,7 +109,7 @@ public class PublishedRecipeServiceTest {
                 assertTrue(dtoIDs.contains(dto.getId()));
             }
 
-            verify(repository, times(1)).findByNameContaining(searchTerm);
+            verify(repository, times(1)).findByNameContainingIgnoreCase(searchTerm);
         } catch (JsonProcessingException ignored){
 
         }
