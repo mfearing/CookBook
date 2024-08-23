@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @Profile("production")
@@ -38,17 +39,18 @@ public class RecipePublishedListener {
             String name = payload.get("name").toString();
             String author = payload.get("author").toString();
 
-            PublishedRecipe existing = publishedRecipeService.getPublishedRecipeByRecipeId(recipeId);
+            Optional<PublishedRecipe> existing = publishedRecipeService.getPublishedRecipeByRecipeId(recipeId);
 
-            if(existing == null) {
+            if(existing.isEmpty()) {
                 //If recipe isn't already published
                 PublishedRecipe publishedRecipe = publishedRecipeFromPayload(recipeId, name, author, in);
                 publishedRecipeService.save(publishedRecipe);
             } else {
                 //If recipe is already published, update properties and save
-                existing.setName(name);
-                existing.setRecipeData(in);
-                publishedRecipeService.save(existing);
+                PublishedRecipe existingPR = existing.get();
+                existingPR.setName(name);
+                existingPR.setRecipeData(in);
+                publishedRecipeService.save(existingPR);
             }
 
         } catch (final JsonProcessingException e) {

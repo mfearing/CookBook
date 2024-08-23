@@ -18,7 +18,7 @@ public class PublishedRecipeController {
 
     @GetMapping
     public List<PublishedRecipeDTO> getAllPublishedRecipes(){
-        return publishedRecipeService.getPublishedRecipes();
+        return publishedRecipeService.getPublishedRecipeDTOs();
     }
 
 }

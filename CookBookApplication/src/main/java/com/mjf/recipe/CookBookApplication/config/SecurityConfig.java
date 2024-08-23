@@ -27,9 +27,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        //all of these endpoints are non-authenticated, do i even need these to be manually typed out?
                         .requestMatchers("/published").permitAll()
-                        //.anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 );
         return http.build();
     }
