@@ -1,2 +1,15 @@
-package com.mjf.recipe.RecipeApplication.dtos;public class RecipeSummaryDTO {
+package com.mjf.recipe.RecipeApplication.dtos;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class RecipeSummaryDTO {
+    private Long id;
+    private String name;
 }

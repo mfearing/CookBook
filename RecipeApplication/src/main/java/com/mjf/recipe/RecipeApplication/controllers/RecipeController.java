@@ -1,5 +1,6 @@
 package com.mjf.recipe.RecipeApplication.controllers;
 
+import com.mjf.recipe.RecipeApplication.dtos.RecipeSummaryDTO;
 import com.mjf.recipe.RecipeApplication.entities.Recipe;
 import com.mjf.recipe.RecipeApplication.entities.RecipeIngredient;
 import com.mjf.recipe.RecipeApplication.exceptions.AppException;
@@ -30,6 +31,14 @@ public class RecipeController {
     @GetMapping
     public List<Recipe> getAllRecipes(){
         return recipeService.findByAuthor(RecipeUtils.getAuthenticatedUserLogin());
+    }
+
+    @GetMapping("/summary")
+    public List<RecipeSummaryDTO> getSummaryRecipes(){
+        return recipeService.findByAuthor(RecipeUtils.getAuthenticatedUserLogin())
+                .stream()
+                .map(recipe -> new RecipeSummaryDTO(recipe.getId(), recipe.getName()))
+                .toList();
     }
 
     //should we have this? maybe it should be tied to user id?
