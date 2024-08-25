@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useRecipeContext from "../../../hooks/use-recipe-context"
 import { RecipeContextType } from "../../../context/recipe";
 import RecipeDetails from "../../../types/recipe/recipeDetails";
@@ -7,28 +7,31 @@ import { Stack } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable, { DataGridRow } from "./DataTable";
 import DescriptionCard from "./DescriptionCard";
-import InstructionsCard from "./InstructionsCard";
+// import InstructionsCard from "./InstructionsCard";
 
 
 export default function RecipeDataTable(){
-    const {recipes, fetchRecipes} = useRecipeContext() as RecipeContextType;
-    const [selectedRecipe, setSelectedRecipe] = useState<number | null>(null);
+    const {recipe, recipeSummaries, fetchRecipeById, fetchSummaryRecipes} = useRecipeContext() as RecipeContextType;
 
     useEffect(() => {
-        fetchRecipes(); 
-    }, [fetchRecipes]);
+        fetchSummaryRecipes(); 
+    }, [fetchSummaryRecipes]);
 
     const handleSelectRecipe = (recipe: RecipeDetails) => {
         if(recipe.id){
-            setSelectedRecipe(recipe.id);
+            fetchRecipeById(recipe.id);
         }
     };
 
-    //const label="Recipe Ingredient";
-
-    const recipeDropdown = <RecipeDropdown data={recipes} selectedRecipe={selectedRecipe} handleClick={handleSelectRecipe} />;
-
-    const rec = recipes?.find((r) => r.id === selectedRecipe);
+    
+    let typeScriptIsStupid; //I don't know why I can't just use recipe ? recipe.id : null
+    if(recipe !== null && recipe !== undefined && recipe.id){
+        typeScriptIsStupid = recipe.id;
+    } else {
+        typeScriptIsStupid = null;
+    }
+    
+    const recipeDropdown = <RecipeDropdown data={recipeSummaries} selectedRecipe={typeScriptIsStupid} handleClick={handleSelectRecipe} />;
 
     const columns: GridColDef[] = [
         {field: 'id', headerName: 'ID', flex: 0, type: 'number', sortable: true},
@@ -38,8 +41,8 @@ export default function RecipeDataTable(){
     ];
 
     let rows: DataGridRow[] = [];
-    if(rec !== undefined && rec.recipeIngredients !== null){
-         rows = rec.recipeIngredients.map((recIng) => {
+    if(recipe && recipe.recipeIngredients !== null){
+         rows = recipe.recipeIngredients.map((recIng) => {
             return {
                 id: recIng.id,
                 ingredient: recIng.ingredient.name, 
@@ -50,23 +53,22 @@ export default function RecipeDataTable(){
     } 
     
     let recipeDataTable = <></>
-    if(rec && rec.recipeIngredients.length > 0){
+    if(recipe && recipe.recipeIngredients.length > 0){
         recipeDataTable = (
             <>
                 <DataTable rows={rows} columns={columns} handleRefresh={() => {}} />
                 <br /><br />
                 {/* <AddRowForm handleSubmit={() =>{}} label={label} /> */}
             </>
-        )
+        );
     }
     
     return(
         <div>
             {recipeDropdown}
             <Stack spacing={2} useFlexGap sx={{ width: {xs: '100%', sm: '100%'} }}>
-                { rec ? <DescriptionCard name={rec.name} author={rec.author} description={rec.description} /> : <></> }
+                { recipe ? <DescriptionCard name={recipe.name} author={recipe.author} description={recipe.description} instructions={recipe.instructions} /> : <></> }
                 {recipeDataTable}
-                { rec ? <InstructionsCard instructions={rec.instructions} /> : <></>}
             </Stack>
         </div>
     )

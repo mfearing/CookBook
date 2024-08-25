@@ -1,11 +1,6 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 import type RecipeDetails from "../../../types/recipe/recipeDetails";
 
-export interface RecipeDropdownDetails{
-    id: number,
-    name: string,
-}
-
 export interface RecipeDropdownProps {
     data: RecipeDetails[] | null,
     selectedRecipe: number | null,
