@@ -11,7 +11,7 @@ import DescriptionCard from "./DescriptionCard";
 
 
 export default function RecipeDataTable(){
-    const {recipe, recipeSummaries, fetchRecipeById, fetchSummaryRecipes} = useRecipeContext() as RecipeContextType;
+    const {recipe, recipeSummaries, fetchRecipeById, fetchSummaryRecipes, patchRecipe} = useRecipeContext() as RecipeContextType;
 
     useEffect(() => {
         fetchSummaryRecipes(); 
@@ -23,6 +23,11 @@ export default function RecipeDataTable(){
         }
     };
 
+    const handleRecipePatch = (name: string, description: string, instructions: string) => {
+        if(recipe){
+            patchRecipe(name, description, instructions);
+        }
+    };
     
     let typeScriptIsStupid; //I don't know why I can't just use recipe ? recipe.id : null
     if(recipe !== null && recipe !== undefined && recipe.id){
@@ -67,7 +72,14 @@ export default function RecipeDataTable(){
         <div>
             {recipeDropdown}
             <Stack spacing={2} useFlexGap sx={{ width: {xs: '100%', sm: '100%'} }}>
-                { recipe ? <DescriptionCard name={recipe.name} author={recipe.author} description={recipe.description} instructions={recipe.instructions} /> : <></> }
+                { recipe ? 
+                    <DescriptionCard 
+                        name={recipe.name} 
+                        author={recipe.author} 
+                        description={recipe.description} 
+                        instructions={recipe.instructions}
+                        handleRecipePatch={handleRecipePatch}    
+                    /> : <></> }
                 {recipeDataTable}
             </Stack>
         </div>

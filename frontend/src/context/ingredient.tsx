@@ -22,7 +22,7 @@ function IngredientProvider({children}: {children: ReactNode}){
         } catch (error) {
             //console.log(error);
         }
-    }, [recipeApi]); //doesn't actually have a dependency on api, will do infinite loop if added here; add dependency if using authContext directly
+    }, [recipeApi]); //memeoized via useMemo in the api, so can add here without causing infinite loop
 
     const deleteIngredient = async(id: number): Promise<void> => {
         try{

@@ -6,7 +6,8 @@ export interface RecipeContextType {
     recipe: RecipeDetails | null,
     recipeSummaries: RecipeDetails[],
     fetchRecipeById: (id: number) => Promise<void>,
-    fetchSummaryRecipes: () => Promise<void>
+    fetchSummaryRecipes: () => Promise<void>,
+    patchRecipe: (name: string, description: string, instructions: string) => Promise<void>
 }
 
 const RecipeContext = createContext<RecipeContextType | null>(null);
@@ -34,8 +35,31 @@ function RecipeProvider({children}: {children: ReactNode}){
         }
     }
 
+    const patchRecipe = async(name: string, description: string, instructions: string): Promise<void> => {
+        try{
+            if(!recipe || !recipe.id){
+                throw new Error("Must select a recipe to patch.");
+            }
+
+            const recipePatch: RecipeDetails = {
+                id: recipe?.id,
+                author: recipe?.author,
+                name: name ? name : recipe?.name,
+                description: description ? description : recipe?.description,
+                instructions: instructions ? instructions : recipe?.instructions,
+                recipeIngredients: recipe.recipeIngredients
+            }
+
+            const response = await recipeApi.patch(`/recipe/${recipe.id}`, recipePatch);
+            setRecipe(response.data);
+
+        }  catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
-        <RecipeContext.Provider value = {{recipe, recipeSummaries, fetchRecipeById, fetchSummaryRecipes}}>
+        <RecipeContext.Provider value = {{recipe, recipeSummaries, fetchRecipeById, fetchSummaryRecipes, patchRecipe}}>
             {children} 
         </RecipeContext.Provider>
     )
