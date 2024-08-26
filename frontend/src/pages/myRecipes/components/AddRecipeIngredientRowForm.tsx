@@ -62,7 +62,7 @@ export default function AddRecipeIngredientRowForm({handleRecipeIngredientCreate
                     options={ingredients}
                     getOptionLabel={(ingredient) => ingredient.name}
                     value={ingredient}
-                    onChange={(event, val) => {
+                    onChange={(_event, val) => {
                         setIngredient(val);
                     }}
                     renderInput={
@@ -75,7 +75,7 @@ export default function AddRecipeIngredientRowForm({handleRecipeIngredientCreate
                     options={units}
                     getOptionLabel={(unit) => unit.name}
                     value={unit}
-                    onChange={(event, val) => {
+                    onChange={(_event, val) => {
                         setUnit(val);
                     }}
                     renderInput={

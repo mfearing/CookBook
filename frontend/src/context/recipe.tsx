@@ -1,11 +1,15 @@
 import { createContext, useState, useCallback, ReactNode } from "react";
 import type RecipeDetails from "../types/recipe/recipeDetails";
 import useRecipeApi from "../hooks/use-recipe-api";
+import useAuthContext from "../hooks/use-auth-context";
+import { AuthContextType } from "./auth";
 
 export interface RecipeContextType {
     recipe: RecipeDetails | null,
     recipeSummaries: RecipeDetails[],
     fetchRecipeById: (id: number) => Promise<void>,
+    createNewRecipe: () => Promise<void>,
+    deleteRecipe: (id: number | null) => Promise<void>,
     fetchSummaryRecipes: () => Promise<void>,
     patchRecipe: (name: string, description: string, instructions: string) => Promise<void>
     deleteRecipeIngredient: (recipeId: number, ingredientId: number) => Promise<void>,
@@ -19,6 +23,8 @@ function RecipeProvider({children}: {children: ReactNode}){
     const [recipeSummaries, setRecipeSummaries] = useState<RecipeDetails[]>([]);
     const recipeApi = useRecipeApi();
 
+    const {userLogin} = useAuthContext() as AuthContextType;
+
     const fetchSummaryRecipes = useCallback(async(): Promise<void> => {
         try{
             const response = await recipeApi.get("/recipe/summary");
@@ -27,6 +33,42 @@ function RecipeProvider({children}: {children: ReactNode}){
             //console.log(error);
         }
     }, [recipeApi]);
+
+    const createNewRecipe = async(): Promise<void> => {
+        try{
+            if(!userLogin || !userLogin.login){
+                throw new Error("Not logged in");
+            }
+
+            const newRecipe: RecipeDetails = {
+                author: userLogin?.login,
+                description: '',
+                instructions: '',
+                name: "Change Me!",
+                recipeIngredients: []
+            }
+
+            const response = await recipeApi.post(`/recipe`, newRecipe);
+            fetchSummaryRecipes();
+            setRecipe(response.data);
+
+        }  catch (error) {
+            console.log(error);
+        }
+    }
+
+    const deleteRecipe = async(id: number | null): Promise<void> => {
+        try{
+            if(id != null){
+                await recipeApi.delete(`/recipe/${id}`);
+                fetchSummaryRecipes();
+                setRecipe(null);
+            }
+        }catch(error){
+            console.log(error);
+        }
+    }
+
 
     const fetchRecipeById = async(id: number): Promise<void> => {
         try{
@@ -53,6 +95,7 @@ function RecipeProvider({children}: {children: ReactNode}){
             }
 
             const response = await recipeApi.patch(`/recipe/${recipe.id}`, recipePatch);
+            fetchSummaryRecipes();
             setRecipe(response.data);
 
         }  catch (error) {
@@ -89,7 +132,9 @@ function RecipeProvider({children}: {children: ReactNode}){
     }
 
     return (
-        <RecipeContext.Provider value = {{recipe, recipeSummaries, fetchRecipeById, fetchSummaryRecipes, patchRecipe, deleteRecipeIngredient, createRecipeIngredient}}>
+        <RecipeContext.Provider value = {{recipe, recipeSummaries, fetchRecipeById, createNewRecipe, deleteRecipe,
+            fetchSummaryRecipes, patchRecipe, deleteRecipeIngredient, createRecipeIngredient}}
+        >
             {children} 
         </RecipeContext.Provider>
     )

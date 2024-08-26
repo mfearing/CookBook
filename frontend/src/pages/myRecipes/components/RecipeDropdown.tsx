@@ -25,13 +25,13 @@ export default function RecipeDropdown({data, selectedRecipe, handleClick}: Reci
     }
 
     return (
-        <Box sx={{ my: 1, width: {xs: '100%', sm: '50%'} }} >
+        <Box sx={{ my: 1, width: {xs: '100%', sm: '95%'} }} >
             <FormControl fullWidth>
                 <InputLabel id="recipe-select-label">Select Recipe</InputLabel>
                 <Select
                     labelId="recipe-select"
                     label="Select Recipe"
-                    value={selectedRecipe ? JSON.stringify(selectedRecipe) : ''} //materialUI doesn't seem to like numbers, so convert to string
+                    value={selectedRecipe ? JSON.stringify(selectedRecipe) : ''} 
                     onChange={handleOnChange}
                 >
                     {recipeMenuItems}

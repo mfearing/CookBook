@@ -3,17 +3,17 @@ import useRecipeContext from "../../../hooks/use-recipe-context"
 import { RecipeContextType } from "../../../context/recipe";
 import RecipeDetails from "../../../types/recipe/recipeDetails";
 import RecipeDropdown from "./RecipeDropdown";
-import { Grid, IconButton, Stack, Tooltip } from "@mui/material";
+import { Box, Grid, IconButton, Stack, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable, { DataGridRow } from "./DataTable";
 import DescriptionCard from "./DescriptionCard";
 import AddRecipeIngredientRowForm from "./AddRecipeIngredientRowForm";
-import { Delete } from "@mui/icons-material";
-
+import { Delete, Add } from "@mui/icons-material";
 
 export default function RecipeDataTable(){
     const {recipe, recipeSummaries, fetchRecipeById, 
-        fetchSummaryRecipes, patchRecipe, deleteRecipeIngredient, createRecipeIngredient} = useRecipeContext() as RecipeContextType;
+        fetchSummaryRecipes, patchRecipe, createNewRecipe, deleteRecipe, deleteRecipeIngredient, 
+        createRecipeIngredient} = useRecipeContext() as RecipeContextType;
 
     useEffect(() => {
         fetchSummaryRecipes(); 
@@ -56,7 +56,25 @@ export default function RecipeDataTable(){
         rId = null;
     }
     
-    const recipeDropdown = <RecipeDropdown data={recipeSummaries} selectedRecipe={rId} handleClick={handleSelectRecipe} />;
+    const recipeDropdown = (
+        <Box sx={{display: 'flex', alignItems: 'center',}} >
+            <Box sx={{flex: 1}} >
+                <RecipeDropdown data={recipeSummaries} selectedRecipe={rId} handleClick={handleSelectRecipe} />
+            </Box>
+            <Box sx={{flex: 1}}>
+                <Tooltip title="Add Recipe">
+                    <IconButton onClick={() => createNewRecipe()} color='primary' >
+                        <Add />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete Recipe">
+                    <IconButton onClick={() => deleteRecipe(rId)} color='warning' >
+                        <Delete />
+                    </IconButton>
+                </Tooltip>
+            </Box>
+        </Box>
+    );
 
     const columns: GridColDef[] = [
         {field: 'id', headerName: 'ID', flex: 0, type: 'number', sortable: true},
@@ -93,7 +111,7 @@ export default function RecipeDataTable(){
     } 
     
     let recipeDataTable = <></>
-    if(recipe && recipe.recipeIngredients.length > 0){
+    if(recipe){
         recipeDataTable = (
             <>
                 <DataTable label="Recipe Ingredients" rows={rows} columns={columns} handleRefresh={handleRecipeIngredientRefresh} />
