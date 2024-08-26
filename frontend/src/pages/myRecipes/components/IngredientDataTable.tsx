@@ -61,7 +61,7 @@ export default function IngredientDataTable(){
 
     return (
         <Box>
-            <DataTable rows={rows} columns={columns} handleRefresh={handleRefresh} />
+            <DataTable label="Ingredients" rows={rows} columns={columns} handleRefresh={handleRefresh} />
             <br /><br />
             <AddRowForm handleSubmit={handleSubmit} label={label} />
         </Box>

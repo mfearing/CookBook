@@ -3,7 +3,7 @@ import type IngredientDetails from "../types/recipe/ingredientDetails";
 import useRecipeApi from "../hooks/use-recipe-api";
 
 export interface IngredientContextType {
-    ingredients: IngredientDetails[] | null,
+    ingredients: IngredientDetails[] | [],
     fetchIngredients: () => Promise<void>
     deleteIngredient: (id: number) => Promise<void>
     addIngredient: (ingredient: IngredientDetails) => Promise<void>

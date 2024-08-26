@@ -8,6 +8,8 @@ export interface RecipeContextType {
     fetchRecipeById: (id: number) => Promise<void>,
     fetchSummaryRecipes: () => Promise<void>,
     patchRecipe: (name: string, description: string, instructions: string) => Promise<void>
+    deleteRecipeIngredient: (recipeId: number, ingredientId: number) => Promise<void>,
+    createRecipeIngredient: (recipeId: number, ingredientId: number, unitId: number, quantity: number) => Promise<void>
 }
 
 const RecipeContext = createContext<RecipeContextType | null>(null);
@@ -29,7 +31,7 @@ function RecipeProvider({children}: {children: ReactNode}){
     const fetchRecipeById = async(id: number): Promise<void> => {
         try{
             const response = await recipeApi.get(`/recipe/${id}`);
-            setRecipe(response.data);
+            setRecipe({...response.data});
         } catch (error) {
             //console.log(error);
         }
@@ -58,8 +60,36 @@ function RecipeProvider({children}: {children: ReactNode}){
         }
     }
 
+    const createRecipeIngredient = async(recipeId: number, ingredientId: number, unitId: number, quantity: number): Promise<void> => {
+
+        const ri = [{
+            recipeId: recipeId,
+            ingredient: {id: ingredientId},
+            unit: {id: unitId},
+            quantity: quantity
+        }]
+
+        try{
+            await recipeApi.post(`recipe/${recipeId}/ingredients`, ri);
+            const response = await recipeApi.get(`/recipe/${recipeId}`);
+            setRecipe(response.data); //refreshes recipe due to change in ingredients
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const deleteRecipeIngredient = async(recipeId: number, ingredientId: number): Promise<void> => {
+        try{
+            await recipeApi.delete(`/recipe/${recipeId}/ingredients/${ingredientId}`);
+            const response = await recipeApi.get(`/recipe/${recipeId}`);
+            setRecipe(response.data); //refreshes recipe due to change in ingredients
+        } catch(error){
+            //console.log(error);
+        }
+    }
+
     return (
-        <RecipeContext.Provider value = {{recipe, recipeSummaries, fetchRecipeById, fetchSummaryRecipes, patchRecipe}}>
+        <RecipeContext.Provider value = {{recipe, recipeSummaries, fetchRecipeById, fetchSummaryRecipes, patchRecipe, deleteRecipeIngredient, createRecipeIngredient}}>
             {children} 
         </RecipeContext.Provider>
     )
