@@ -3,7 +3,7 @@ import type UnitDetails from "../types/recipe/unitDetails";
 import useRecipeApi from "../hooks/use-recipe-api";
 
 export interface UnitContextType {
-    units: UnitDetails[] | null,
+    units: UnitDetails[] | [],
     fetchUnits: () => Promise<void>
     deleteUnit: (id: number) => Promise<void>
     addUnit: (unit: UnitDetails) => Promise<void>

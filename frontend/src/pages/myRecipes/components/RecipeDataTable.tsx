@@ -1,45 +1,106 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useRecipeContext from "../../../hooks/use-recipe-context"
 import { RecipeContextType } from "../../../context/recipe";
 import RecipeDetails from "../../../types/recipe/recipeDetails";
 import RecipeDropdown from "./RecipeDropdown";
-import { Stack } from "@mui/material";
+import { Box, Grid, IconButton, Stack, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable, { DataGridRow } from "./DataTable";
 import DescriptionCard from "./DescriptionCard";
-import InstructionsCard from "./InstructionsCard";
-
+import AddRecipeIngredientRowForm from "./AddRecipeIngredientRowForm";
+import { Delete, Add } from "@mui/icons-material";
 
 export default function RecipeDataTable(){
-    const {recipes, fetchRecipes} = useRecipeContext() as RecipeContextType;
-    const [selectedRecipe, setSelectedRecipe] = useState<number | null>(null);
+    const {recipe, recipeSummaries, fetchRecipeById, 
+        fetchSummaryRecipes, patchRecipe, createNewRecipe, deleteRecipe, deleteRecipeIngredient, 
+        createRecipeIngredient} = useRecipeContext() as RecipeContextType;
 
     useEffect(() => {
-        fetchRecipes(); 
-    }, [fetchRecipes]);
+        fetchSummaryRecipes(); 
+    }, [fetchSummaryRecipes]);
 
-    const handleSelectRecipe = (recipe: RecipeDetails) => {
-        if(recipe.id){
-            setSelectedRecipe(recipe.id);
+    const handleSelectRecipe = (r: RecipeDetails) => {
+        if(r.id){
+            fetchRecipeById(r.id);
         }
     };
 
-    //const label="Recipe Ingredient";
+    const handleRecipePatch = (name: string, description: string, instructions: string) => {
+        if(recipe){
+            patchRecipe(name, description, instructions);
+        }
+    };
 
-    const recipeDropdown = <RecipeDropdown data={recipes} selectedRecipe={selectedRecipe} handleClick={handleSelectRecipe} />;
+    const handleRecipeIngredientRefresh = () => {
+        if(recipe !== null && recipe !== undefined && recipe.id){
+            fetchRecipeById(recipe.id);
+        }
+    };
 
-    const rec = recipes?.find((r) => r.id === selectedRecipe);
+    const handleRecipeIngredientDelete = (recipeId: number | undefined, recipeIngredientId: number) => {
+        if(recipeId !== undefined){
+            deleteRecipeIngredient(recipeId, recipeIngredientId);
+        }
+    };
+
+    const handleRecipeIngredientCreate = (ingredientId: number, unitId: number, quantity: number) => {
+        if(recipe !== null && recipe !== undefined && recipe.id){
+            createRecipeIngredient(recipe?.id, ingredientId, unitId, quantity);
+        }
+    }
+    
+    let rId; //I don't know why I can't just use recipe ? recipe.id : null
+    if(recipe !== null && recipe !== undefined && recipe.id){
+        rId = recipe.id;
+    } else {
+        rId = null;
+    }
+    
+    const recipeDropdown = (
+        <Box sx={{display: 'flex', alignItems: 'center',}} >
+            <Box sx={{flex: 1}} >
+                <RecipeDropdown data={recipeSummaries} selectedRecipe={rId} handleClick={handleSelectRecipe} />
+            </Box>
+            <Box sx={{flex: 1}}>
+                <Tooltip title="Add Recipe">
+                    <IconButton onClick={() => createNewRecipe()} color='primary' >
+                        <Add />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete Recipe">
+                    <IconButton onClick={() => deleteRecipe(rId)} color='warning' >
+                        <Delete />
+                    </IconButton>
+                </Tooltip>
+            </Box>
+        </Box>
+    );
 
     const columns: GridColDef[] = [
         {field: 'id', headerName: 'ID', flex: 0, type: 'number', sortable: true},
         {field: 'ingredient', headerName: 'Ingredient', flex: 3, type: 'string', sortable: true},
         {field: 'quantity', headerName: 'Quantity', flex: 1, type: 'string', sortable: true},
         {field: 'unit', headerName: 'Unit', flex: 1, type: 'string', sortable: true},
+        {
+            field: 'delete',
+            headerName: ' ',
+            sortable: false,
+            disableColumnMenu: true,
+            renderCell: (params) => (
+                <Grid container justifyContent="flex-end">
+                    <Tooltip title="Delete">
+                        <IconButton onClick={() => handleRecipeIngredientDelete(recipe?.id, params.id as number)}  >
+                            <Delete />
+                        </IconButton>
+                    </Tooltip>
+                </Grid>
+            )
+        }
     ];
 
     let rows: DataGridRow[] = [];
-    if(rec !== undefined && rec.recipeIngredients !== null){
-         rows = rec.recipeIngredients.map((recIng) => {
+    if(recipe && recipe.recipeIngredients !== null){
+         rows = recipe.recipeIngredients.map((recIng) => {
             return {
                 id: recIng.id,
                 ingredient: recIng.ingredient.name, 
@@ -50,24 +111,30 @@ export default function RecipeDataTable(){
     } 
     
     let recipeDataTable = <></>
-    if(rec && rec.recipeIngredients.length > 0){
+    if(recipe){
         recipeDataTable = (
             <>
-                <DataTable rows={rows} columns={columns} handleRefresh={() => {}} />
+                <DataTable label="Recipe Ingredients" rows={rows} columns={columns} handleRefresh={handleRecipeIngredientRefresh} />
                 <br /><br />
-                {/* <AddRowForm handleSubmit={() =>{}} label={label} /> */}
+                <AddRecipeIngredientRowForm handleRecipeIngredientCreate={handleRecipeIngredientCreate} />
             </>
-        )
+        );
     }
     
     return(
-        <div>
+        <>
             {recipeDropdown}
             <Stack spacing={2} useFlexGap sx={{ width: {xs: '100%', sm: '100%'} }}>
-                { rec ? <DescriptionCard name={rec.name} author={rec.author} description={rec.description} /> : <></> }
+                { recipe ? 
+                    <DescriptionCard 
+                        name={recipe.name} 
+                        author={recipe.author} 
+                        description={recipe.description} 
+                        instructions={recipe.instructions}
+                        handleRecipePatch={handleRecipePatch}    
+                    /> : <></> }
                 {recipeDataTable}
-                { rec ? <InstructionsCard instructions={rec.instructions} /> : <></>}
             </Stack>
-        </div>
+        </>
     )
 }

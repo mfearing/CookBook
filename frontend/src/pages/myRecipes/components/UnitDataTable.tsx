@@ -60,7 +60,7 @@ export default function UnitDataTable(){
 
     return (
         <>
-            <DataTable rows={rows} columns={columns} handleRefresh={handleRefresh} />
+            <DataTable label="Units" rows={rows} columns={columns} handleRefresh={handleRefresh} />
             <br /><br />
             <AddRowForm handleSubmit={handleSubmit} label={label} />
         </>

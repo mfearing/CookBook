@@ -9,10 +9,6 @@ export interface AddRowFormProps {
 export default function AddRowForm({handleSubmit, label}: AddRowFormProps){
     const [newItem, setNewItem] = useState('');
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNewItem(event.target.value);
-    }
-
     const handleCreateSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         handleSubmit(newItem);
@@ -37,7 +33,7 @@ export default function AddRowForm({handleSubmit, label}: AddRowFormProps){
                 <TextField
                     label={`New ${label}`}
                     value={newItem}
-                    onChange={handleInputChange}
+                    onChange={(event) => {setNewItem(event.target.value)}}
                     variant="outlined"
                     fullWidth
                     required
