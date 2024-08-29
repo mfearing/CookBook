@@ -26,6 +26,10 @@ public class PublishedRecipeService {
         return publishedRecipeRepository.findById(id);
     }
 
+    public PublishedRecipeDTO findPublishedRecipeDTOById(Long id){
+        return mapPublishedRecipeToDTO(publishedRecipeRepository.findById(id).orElse(null));
+    }
+
     public List<PublishedRecipeDTO> getPublishedRecipeDTOs(){
         List<PublishedRecipe> publishedRecipes = publishedRecipeRepository.findAll();
         return publishedRecipes.stream().map(this::mapPublishedRecipeToDTO).toList();
@@ -56,6 +60,10 @@ public class PublishedRecipeService {
     }
 
     private PublishedRecipeDTO mapPublishedRecipeToDTO(PublishedRecipe publishedRecipe) {
+        if(publishedRecipe == null){
+            return null;
+        }
+
         try {
             Map<String, Object> recipeObject = objectMapper.readValue(publishedRecipe.getRecipeData(), Map.class);
             return PublishedRecipeDTO.builder()

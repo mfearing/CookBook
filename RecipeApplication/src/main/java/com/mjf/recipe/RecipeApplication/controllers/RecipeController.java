@@ -67,6 +67,16 @@ public class RecipeController {
         return finalRecipe;
     }
 
+    @PostMapping("/{id}")
+    public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe){
+        //check recipe being sent is correct id
+        if(recipe.getId().equals(id)){
+            checkIsAuthor(id);
+            return recipeService.save(recipe);
+        }
+        throw new AppException("Update failed: recipe data did not match path id", HttpStatus.BAD_REQUEST);
+    }
+
     @PatchMapping("/{id}")
     public Recipe updateRecipeDetails(@PathVariable Long id, @RequestBody Recipe recipe){
         checkIsAuthor(id);
