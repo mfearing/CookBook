@@ -10,6 +10,7 @@ export interface RecipeContextType {
     fetchRecipeById: (id: number) => Promise<void>,
     createNewRecipe: () => Promise<void>,
     deleteRecipe: (id: number | null) => Promise<void>,
+    publishRecipe: (id: number) => Promise<void>,
     fetchSummaryRecipes: () => Promise<void>,
     patchRecipe: (name: string, description: string, instructions: string) => Promise<void>
     deleteRecipeIngredient: (recipeId: number, ingredientId: number) => Promise<void>,
@@ -69,6 +70,13 @@ function RecipeProvider({children}: {children: ReactNode}){
         }
     }
 
+    const publishRecipe = async(id: number): Promise<void> => {
+        try{
+            await recipeApi.get(`/recipe/${id}/publish`);
+        } catch (error){
+            console.log(error);
+        }
+    }
 
     const fetchRecipeById = async(id: number): Promise<void> => {
         try{
@@ -132,7 +140,8 @@ function RecipeProvider({children}: {children: ReactNode}){
     }
 
     return (
-        <RecipeContext.Provider value = {{recipe, recipeSummaries, fetchRecipeById, createNewRecipe, deleteRecipe,
+        <RecipeContext.Provider value = {{recipe, recipeSummaries, 
+            fetchRecipeById, createNewRecipe, deleteRecipe, publishRecipe,
             fetchSummaryRecipes, patchRecipe, deleteRecipeIngredient, createRecipeIngredient}}
         >
             {children} 
