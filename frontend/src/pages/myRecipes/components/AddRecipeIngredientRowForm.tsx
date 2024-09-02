@@ -21,7 +21,7 @@ export default function AddRecipeIngredientRowForm({handleRecipeIngredientCreate
     useEffect(() => {
         fetchIngredients();
         fetchUnits();
-    }, [fetchIngredients, fetchUnits])
+    }, [fetchIngredients, fetchUnits]);
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const val = event.target.value;

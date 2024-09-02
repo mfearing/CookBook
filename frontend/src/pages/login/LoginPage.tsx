@@ -3,6 +3,7 @@ import { Box, Container, TextField, Button, Grid } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthContext from "../../hooks/use-auth-context";
 import { useState } from "react";
+import { AuthContextType } from "../../context/auth";
 
 
 export default function LoginPage(){
@@ -10,17 +11,14 @@ export default function LoginPage(){
     const [login, setFirstName] = useState('');
     const [password, setPassword] = useState('');
 
-    const authContext = useAuthContext();
-    if(authContext === null){
-        throw new Error('uh oh! Auth Context undefiend!');
-    }
+    const {getAuthByLogin} = useAuthContext() as AuthContextType;
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        authContext.getAuthByLogin({
-            login: data.get('login') as string,
-            password: data.get('password') as string
+        //TODO: change the below to use the component state, not the event data
+        getAuthByLogin({
+            login: login,
+            password: password
         });
         //Setting multiple pieces of state, so should probably use useReducer
         setFirstName('');

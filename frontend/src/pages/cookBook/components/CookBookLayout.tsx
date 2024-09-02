@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useCookBookContext from "../../../hooks/use-cookbook-context";
 import { CookBookContextType } from "../../../context/cookbook";
 import CookBookRecipeCard from "./CookBookRecipeCard";
@@ -10,11 +10,8 @@ export default function CookBookLayout() {
     const [searchTerm, setSearchTerm] = useState('');
     const {publishedRecipes, fetchPublishedRecipesByName} = useCookBookContext() as CookBookContextType;
 
-    useEffect(() => {
-        //fetchPublishedRecipes();
-    }, []);
-
-    const handleSearchClick = () => {
+    const handleSearchClick = (event: React.FormEvent) => {
+        event.preventDefault();
         if(searchTerm !== ''){
             fetchPublishedRecipesByName(searchTerm);
         }
@@ -35,12 +32,12 @@ export default function CookBookLayout() {
 
     return (
         <>
-            <Box sx={{display: 'flex', alignItems:'center', width: 500, maxWidth: '100%', mt:2}}>
+            <Box component='form' onSubmit={handleSearchClick} sx={{display: 'flex', alignItems:'center', width: 500, maxWidth: '100%', mt:2}} >
                 <TextField id="search-term" label="Search By Recipe Name" 
                     variant="outlined" onChange={(event) => setSearchTerm(event.target.value)} 
-                    required fullWidth
+                    required fullWidth onSubmit={handleSearchClick}
                 />
-                <Button variant='contained' sx={{ml: 2}} onClick={handleSearchClick} >Search</Button>
+                <Button variant='contained' sx={{ml: 2}} type="submit" >Search</Button>
             </Box>  
             <Grid container spacing={2} sx={{mt: 2}}>
                 {cards}
