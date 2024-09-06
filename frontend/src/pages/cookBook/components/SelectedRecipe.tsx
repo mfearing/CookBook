@@ -2,6 +2,8 @@ import { Button, Card, CardContent, CardHeader, Grid, List, ListItem, ListItemIc
 import RecipeIngredientDetails from "../../../types/recipe/recipeIngredientDetails";
 import { Circle } from "@mui/icons-material";
 import PublishedRecipeDetails from "../../../types/cookbook/publisedRecipeDetails";
+import useAuthContext from "../../../hooks/use-auth-context";
+import { AuthContextType } from "../../../context/auth";
 
 export interface SelectedRecipeProps{
     selectedRecipe: PublishedRecipeDetails,
@@ -10,6 +12,7 @@ export interface SelectedRecipeProps{
 }
 
 export default function SelectedRecipe({selectedRecipe, setSelectedRecipe, cloneRecipe}: SelectedRecipeProps){
+    const {userLogin} = useAuthContext() as AuthContextType;
 
     const recipeData = selectedRecipe.recipeData;
 
@@ -21,7 +24,7 @@ export default function SelectedRecipe({selectedRecipe, setSelectedRecipe, clone
                 <Typography>{ingredient}</Typography>
             </ListItem>
         );
-    })
+    });
 
     return(
         <>
@@ -30,7 +33,7 @@ export default function SelectedRecipe({selectedRecipe, setSelectedRecipe, clone
                     <Button sx={{mb:1}} variant="contained" onClick={() => {setSelectedRecipe(null)}} >
                         Return
                     </Button>
-                    <Button variant="contained" onClick={cloneRecipe}>Clone</Button>
+                    <Button disabled={!userLogin} variant="contained" onClick={cloneRecipe}>Clone</Button>
                 </Stack>
             </Grid>
             <Grid item xs={11} >
