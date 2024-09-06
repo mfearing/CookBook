@@ -3,13 +3,13 @@ import useCookBookContext from "../../../hooks/use-cookbook-context";
 import { CookBookContextType } from "../../../context/cookbook";
 import CookBookRecipeCard from "./CookBookRecipeCard";
 import { Box, Button, Grid, TextField} from "@mui/material";
-import RecipeDetails from "../../../types/recipe/recipeDetails";
 import SelectedRecipe from "./SelectedRecipe";
+import PublishedRecipeDetails from "../../../types/cookbook/publisedRecipeDetails";
 
 export default function CookBookLayout() {
-    const [selectedRecipe, setSelectedRecipe] = useState<RecipeDetails | null>(null);
+    const [selectedRecipe, setSelectedRecipe] = useState<PublishedRecipeDetails | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const {publishedRecipes, fetchPublishedRecipesByName} = useCookBookContext() as CookBookContextType;
+    const {publishedRecipes, fetchPublishedRecipesByName, clonePublishedRecipe} = useCookBookContext() as CookBookContextType;
 
     const handleSearchClick = (event: React.FormEvent) => {
         event.preventDefault();
@@ -21,7 +21,13 @@ export default function CookBookLayout() {
     const handleRecipeCardClick = (id: number) => {
         const selected = publishedRecipes.find(r => r.id === id);
         if(selected){
-            setSelectedRecipe(selected.recipeData);
+            setSelectedRecipe(selected);
+        }
+    }
+
+    const handleCloneClick = () => {
+        if(selectedRecipe && selectedRecipe.id){
+            clonePublishedRecipe(selectedRecipe.id);
         }
     }
 
@@ -41,7 +47,7 @@ export default function CookBookLayout() {
     let recipe;
     if(selectedRecipe !== null){
         recipe = (
-            <SelectedRecipe selectedRecipe={selectedRecipe} setSelectedRecipe={setSelectedRecipe} />
+            <SelectedRecipe selectedRecipe={selectedRecipe} setSelectedRecipe={setSelectedRecipe} cloneRecipe={handleCloneClick} />
         );
     }
 

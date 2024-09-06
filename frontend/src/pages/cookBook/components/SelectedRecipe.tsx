@@ -1,16 +1,19 @@
 import { Button, Card, CardContent, CardHeader, Grid, List, ListItem, ListItemIcon, Stack, Typography } from "@mui/material";
-import RecipeDetails from "../../../types/recipe/recipeDetails";
 import RecipeIngredientDetails from "../../../types/recipe/recipeIngredientDetails";
 import { Circle } from "@mui/icons-material";
+import PublishedRecipeDetails from "../../../types/cookbook/publisedRecipeDetails";
 
 export interface SelectedRecipeProps{
-    selectedRecipe: RecipeDetails,
-    setSelectedRecipe: (recipe: RecipeDetails | null) => void
+    selectedRecipe: PublishedRecipeDetails,
+    setSelectedRecipe: (recipe: PublishedRecipeDetails | null) => void
+    cloneRecipe: () => void
 }
 
-export default function SelectedRecipe({selectedRecipe, setSelectedRecipe}: SelectedRecipeProps){
+export default function SelectedRecipe({selectedRecipe, setSelectedRecipe, cloneRecipe}: SelectedRecipeProps){
 
-    const recipeIngredients = selectedRecipe.recipeIngredients.map((ri: RecipeIngredientDetails) => {
+    const recipeData = selectedRecipe.recipeData;
+
+    const recipeIngredients = recipeData.recipeIngredients.map((ri: RecipeIngredientDetails) => {
         const ingredient = ri.quantity + " " + ri.unit.name + " " + ri.ingredient.name;
         return(
             <ListItem key={ri.id} sx={{display: 'flex', alignItems:'center', width: 500, maxWidth: '100%'}}>
@@ -27,14 +30,14 @@ export default function SelectedRecipe({selectedRecipe, setSelectedRecipe}: Sele
                     <Button sx={{mb:1}} variant="contained" onClick={() => {setSelectedRecipe(null)}} >
                         Return
                     </Button>
-                    <Button variant="contained">Clone</Button>
+                    <Button variant="contained" onClick={cloneRecipe}>Clone</Button>
                 </Stack>
             </Grid>
             <Grid item xs={11} >
                 <Card>
                 <CardHeader
-                        title={selectedRecipe.name}
-                        subheader={`Author: ${selectedRecipe.author}`}
+                        title={recipeData.name}
+                        subheader={`Author: ${recipeData.author}`}
                     />
                     <CardContent>
                         <List>
@@ -43,11 +46,11 @@ export default function SelectedRecipe({selectedRecipe, setSelectedRecipe}: Sele
                     </CardContent>
                     <CardContent>
                         <Typography>Description: </Typography>
-                        <Typography>{selectedRecipe.description}</Typography>
+                        <Typography>{recipeData.description}</Typography>
                     </CardContent>
                     <CardContent>
                         <Typography>Instructions: </Typography>
-                        <Typography>{selectedRecipe.instructions}</Typography>
+                        <Typography>{recipeData.instructions}</Typography>
                     </CardContent>
                 </Card>
             </Grid>
