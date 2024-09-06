@@ -8,12 +8,12 @@ import { GridColDef } from "@mui/x-data-grid";
 import DataTable, { DataGridRow } from "./DataTable";
 import DescriptionCard from "./DescriptionCard";
 import AddRecipeIngredientRowForm from "./AddRecipeIngredientRowForm";
-import { Delete, Add } from "@mui/icons-material";
+import { Delete, Add, MenuBook } from "@mui/icons-material";
 
 export default function RecipeDataTable(){
     const {recipe, recipeSummaries, fetchRecipeById, 
         fetchSummaryRecipes, patchRecipe, createNewRecipe, deleteRecipe, deleteRecipeIngredient, 
-        createRecipeIngredient} = useRecipeContext() as RecipeContextType;
+        createRecipeIngredient, publishRecipe} = useRecipeContext() as RecipeContextType;
 
     useEffect(() => {
         fetchSummaryRecipes(); 
@@ -24,6 +24,24 @@ export default function RecipeDataTable(){
             fetchRecipeById(r.id);
         }
     };
+
+    const handleRecipeDelete = () => {
+        if(recipe && recipe.id){
+            const confirmDelete = window.confirm("Are you sure you want to delete this recipe?");
+            if(confirmDelete){
+                deleteRecipe(recipe.id);
+            }
+        }
+    }
+
+    const handlePublishRecipe = () => {
+        if(recipe && recipe.id){
+            const confirmPublish = window.confirm("Would you like to publish this recipe to the CookBook?");
+            if(confirmPublish){
+                publishRecipe(recipe.id);
+            }
+        }
+    }
 
     const handleRecipePatch = (name: string, description: string, instructions: string) => {
         if(recipe){
@@ -67,8 +85,13 @@ export default function RecipeDataTable(){
                         <Add />
                     </IconButton>
                 </Tooltip>
+                <Tooltip title="Publish to CookBook">
+                    <IconButton onClick={handlePublishRecipe} color='primary' disabled={!recipe} >
+                        <MenuBook />
+                    </IconButton>
+                </Tooltip>
                 <Tooltip title="Delete Recipe">
-                    <IconButton onClick={() => deleteRecipe(rId)} color='warning' >
+                    <IconButton onClick={handleRecipeDelete} color='warning' disabled={!recipe} >
                         <Delete />
                     </IconButton>
                 </Tooltip>

@@ -10,4 +10,5 @@ public interface PublishedRecipeRepository extends JpaRepository<PublishedRecipe
     List<PublishedRecipe> findByAuthorIgnoreCase(String author);
     List<PublishedRecipe> findByNameContainingIgnoreCase(String searchTerm);
     Optional<PublishedRecipe> findByRecipeId(Long id);
+    Optional<PublishedRecipe> findByIdAndAuthor(Long id, String author);
 }

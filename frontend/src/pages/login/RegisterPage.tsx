@@ -1,25 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Container, TextField, Button, CssBaseline } from "@mui/material";
 import useAuthContext from "../../hooks/use-auth-context";
-
+import { AuthContextType } from "../../context/auth";
 
 export default function RegisterPage(){
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
+  //need useState for all fields, here.
 
-    const authContext = useAuthContext();
-    if(authContext === null){
-        throw new Error('uh oh! Auth Context undefiend!');
-    }
+    const {registerNewLogin} = useAuthContext() as AuthContextType;
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log(data);
-        authContext.registerNewLogin({
-            firstName: data.get('firstName') as string,
-            lastName: data.get('lastName') as string,
-            login: data.get('login') as string,
-            password: data.get('password') as string
-        });
+
+        if(login !== '' && password !== '' && firstName !== '' && lastName !== ''){
+          registerNewLogin({
+              firstName: firstName,
+              lastName: lastName,
+              login: login,
+              password: password
+          });
+        } else {
+          window.alert("One or more fields is missing a value.");
+        }
     };
 
     return (
@@ -27,10 +32,10 @@ export default function RegisterPage(){
         <CssBaseline />
         <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', }} >
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField margin="normal"  required fullWidth id="firstName" label="First Name" name="firstName" autoComplete="First Name" autoFocus />
-            <TextField margin="normal"  required fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="Last Name" />
-            <TextField margin="normal"  required fullWidth id="login" label="Login"name="login" autoComplete="login" />
-            <TextField margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
+            <TextField margin="normal"  required fullWidth id="firstName" onChange={(e) => setFirstName(e.target.value)} label="First Name" name="firstName" autoComplete="First Name" autoFocus />
+            <TextField margin="normal"  required fullWidth id="lastName" onChange={(e) => setLastName(e.target.value)} label="Last Name" name="lastName" autoComplete="Last Name" />
+            <TextField margin="normal"  required fullWidth id="login" onChange={(e) => setLogin(e.target.value)} label="Login"name="login" autoComplete="login" />
+            <TextField margin="normal" required fullWidth name="password" onChange={(e) => setPassword(e.target.value)} label="Password" type="password" id="password" autoComplete="current-password" />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >
               Register Me!
             </Button>
