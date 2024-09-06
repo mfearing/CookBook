@@ -6,7 +6,7 @@ export interface CookBookContextType {
     publishedRecipes: PublishedRecipeDetails[] | [],
     fetchPublishedRecipes: () => Promise<void>,
     fetchPublishedRecipesByName: (searchTerm: string) => Promise<void>
-    clonePublishedRecipe: (id: number) => Promise<void>
+    clonePublishedRecipe: (id: number) => Promise<boolean>
 }
 
 const CookBookContext = createContext<CookBookContextType | null>(null);
@@ -33,12 +33,14 @@ function CookBookProvider({children}: {children: ReactNode}){
         }
     }
 
-    const clonePublishedRecipe = async(id: number): Promise<void> => {
+    const clonePublishedRecipe = async(id: number): Promise<boolean> => {
         try{
-            await cookbookApi.get(`/published/${id}/clone`);
+            const response = await cookbookApi.get(`/published/${id}/clone`);
+            return response.status === 200;
         } catch(error){
             console.log(error);
         }
+        return false;
     }
 
 
