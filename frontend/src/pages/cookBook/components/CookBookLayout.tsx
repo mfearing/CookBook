@@ -3,10 +3,11 @@ import useCookBookContext from "../../../hooks/use-cookbook-context";
 import { CookBookContextType } from "../../../context/cookbook";
 import CookBookRecipeCard from "./CookBookRecipeCard";
 import { Box, Button, Grid, TextField} from "@mui/material";
-//import RecipeDetails from "../../../types/recipe/recipeDetails";
+import RecipeDetails from "../../../types/recipe/recipeDetails";
+import SelectedRecipe from "./SelectedRecipe";
 
 export default function CookBookLayout() {
-    //const [selectedRecipe, setSelectedRecipe] = useState<RecipeDetails | null>(null);
+    const [selectedRecipe, setSelectedRecipe] = useState<RecipeDetails | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const {publishedRecipes, fetchPublishedRecipesByName} = useCookBookContext() as CookBookContextType;
 
@@ -17,6 +18,13 @@ export default function CookBookLayout() {
         }
     };
 
+    const handleRecipeCardClick = (id: number) => {
+        const selected = publishedRecipes.find(r => r.id === id);
+        if(selected){
+            setSelectedRecipe(selected.recipeData);
+        }
+    }
+
     const cards = publishedRecipes.map((pr) => {
         return (
             <Grid item xs={4}> 
@@ -24,11 +32,18 @@ export default function CookBookLayout() {
                     author={pr.recipeData.author} 
                     name={pr.recipeData.name} 
                     description={pr.recipeData.description}
-                    
+                    handleClick={handleRecipeCardClick}
                 />
             </Grid>
         );
     });
+
+    let recipe;
+    if(selectedRecipe !== null){
+        recipe = (
+            <SelectedRecipe selectedRecipe={selectedRecipe} setSelectedRecipe={setSelectedRecipe} />
+        );
+    }
 
     return (
         <>
@@ -40,7 +55,7 @@ export default function CookBookLayout() {
                 <Button variant='contained' sx={{ml: 2}} type="submit" >Search</Button>
             </Box>  
             <Grid container spacing={2} sx={{mt: 2}}>
-                {cards}
+                {selectedRecipe ? recipe : cards}
             </Grid>
         </>
     )
