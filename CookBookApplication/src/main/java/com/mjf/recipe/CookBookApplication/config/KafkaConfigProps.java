@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "devtiro.kafka.clone")
+@ConfigurationProperties(prefix = "devitro.kafka.clone")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

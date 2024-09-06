@@ -26,6 +26,11 @@ public class PublishedRecipeService {
         return publishedRecipeRepository.findById(id);
     }
 
+    public PublishedRecipeDTO findByIdAndAuthor(Long id, String author){
+        Optional<PublishedRecipe> recipe = publishedRecipeRepository.findByIdAndAuthor(id, author);
+        return recipe.map(this::mapPublishedRecipeToDTO).orElse(null);
+    }
+
     public PublishedRecipeDTO findPublishedRecipeDTOById(Long id){
         return mapPublishedRecipeToDTO(publishedRecipeRepository.findById(id).orElse(null));
     }
@@ -74,6 +79,5 @@ public class PublishedRecipeService {
             throw new AppException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 }
