@@ -32,7 +32,7 @@ export default function useCookBookApi() {
         );
 
         return instance;
-    }, []);
+    }, [authContext]);
 
     return api;
 }
