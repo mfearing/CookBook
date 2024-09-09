@@ -20,3 +20,5 @@ recipes without logging in.  A user that is logged in will be able to clone a re
 in the recipe application.  Users may not directly modify any recipe that's been published, but a user can
 re-publish a recipe to the CookBook to update it.
 
+¯\_(ツ)_/¯
+
