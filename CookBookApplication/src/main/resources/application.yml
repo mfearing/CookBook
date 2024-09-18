@@ -10,7 +10,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
     hibernate:
-      ddl-auto:
+      ddl-auto: create
   kafka:
     consumer:
       group-id: cookbook-application
