@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Container, TextField, Button, CssBaseline } from "@mui/material";
 import useAuthContext from "../../hooks/use-auth-context";
 import { AuthContextType } from "../../context/auth";
@@ -8,6 +9,7 @@ export default function RegisterPage(){
   const [lastName, setLastName] = useState('');
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
   //need useState for all fields, here.
 
     const {registerNewLogin} = useAuthContext() as AuthContextType;
@@ -22,6 +24,7 @@ export default function RegisterPage(){
               login: login,
               password: password
           });
+          navigate('/');
         } else {
           window.alert("One or more fields is missing a value.");
         }

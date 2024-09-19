@@ -25,6 +25,11 @@ export default function Header(){
         setAnchorElMenu(null);
     };
 
+    const handlePrefBtnClick = () => {
+        setAnchorElMenu(null);
+        navigate('/user-account');
+    }
+
     const handleCloseMenu = () => {
         setAnchorElMenu(null);
     }
@@ -38,6 +43,7 @@ export default function Header(){
     }
 
     const menuItems = [
+        {label: 'User Account', action: handlePrefBtnClick},
         {label: 'Log Out', action: handleLoginBtnClick}
     ];
     const navigationList = [

@@ -8,6 +8,7 @@ export interface AuthContextType {
     userLogin: UserDetails | null;
     getAuthByLogin: (login: LoginDetails) => Promise<UserDetails | void>;
     registerNewLogin: (signUpDetails: SignUpDetails) => Promise<UserDetails | void>;
+    patchUserLogin: (data: UserDetails) => Promise<UserDetails | void>;
     logUserOut: () => void;
 }
 
@@ -35,12 +36,28 @@ function AuthProvider({children}: {children: ReactNode}) {
         }
     };
 
+    const patchUserLogin = async(data: UserDetails): Promise<UserDetails | void> => {
+        try{
+            const response = await axios.patch(`http://localhost:8181/user/${data.id}`, data, {
+                headers: {
+                    'Authorization': `Bearer ${userLogin?.token}`
+                }
+            });
+            setUserLogin({
+                ...response.data,
+                token: userLogin?.token
+            });
+        } catch(error){
+            console.error(error);
+        }
+    }
+
     const logUserOut = () => {
         setUserLogin(null);
     };
 
     return (
-        <AuthContext.Provider value={{userLogin, getAuthByLogin, registerNewLogin, logUserOut}}>
+        <AuthContext.Provider value={{userLogin, getAuthByLogin, registerNewLogin, patchUserLogin, logUserOut}}>
             {children}
         </AuthContext.Provider>
     );

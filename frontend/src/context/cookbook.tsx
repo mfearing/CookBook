@@ -20,7 +20,7 @@ function CookBookProvider({children}: {children: ReactNode}){
             const response = await cookbookApi.get('/published');
             setPublishedRecipes(response.data);
         } catch (error) {
-            //console.log(error);
+            console.log(error);
         }
     }, [cookbookApi]); //memeoized via useMemo in the api, so can add here without causing infinite loop
 
