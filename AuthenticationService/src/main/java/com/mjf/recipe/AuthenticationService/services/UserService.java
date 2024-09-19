@@ -9,9 +9,12 @@ import com.mjf.recipe.AuthenticationService.exceptions.AppException;
 import com.mjf.recipe.AuthenticationService.mappers.UserMapper;
 import com.mjf.recipe.AuthenticationService.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.CharBuffer;
 import java.util.Optional;
@@ -19,6 +22,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
 
@@ -55,6 +60,36 @@ public class UserService {
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
         return userMapper.toUserDTO(user);
     }
+
+    public UserDTO findById(Long id){
+        User user = userRepository.findById(id).orElse(null);
+        return userMapper.toUserDTO(user);
+    }
+
+    @Transactional
+    public User patchUser(UserDTO userDTO){
+        logger.info(String.valueOf(userDTO.getId()));
+        Optional<User> user = userRepository.findById(userDTO.getId());
+        if(user.isPresent()){
+            User existing = user.get();
+
+            if(userDTO.getFirstName() != null && !userDTO.getFirstName().isEmpty()){
+                existing.setFirstName(userDTO.getFirstName());
+            }
+
+            if(userDTO.getLastName() != null && !userDTO.getLastName().isEmpty()){
+                existing.setLastName(userDTO.getLastName());
+            }
+
+            if(userDTO.getPreferences() != null) {
+                existing.setPreferences(userMapper.mapMapToString(userDTO.getPreferences()));
+            }
+
+            return userRepository.saveAndFlush(existing);
+        }
+        throw  new AppException("User patch failed.  User not found", HttpStatus.BAD_REQUEST);
+    }
+
 
 
 }

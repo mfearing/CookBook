@@ -56,7 +56,7 @@ public interface UserMapper {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.writeValueAsString(preferences);
         } catch (Exception e) {
-            throw new RuntimeException("Error converting Map to JSON", e);
+            throw new RuntimeException("Error converting Map to JSON String", e);
         }
     }
 

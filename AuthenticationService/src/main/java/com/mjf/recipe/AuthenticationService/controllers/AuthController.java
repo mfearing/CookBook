@@ -6,9 +6,12 @@ import com.mjf.recipe.AuthenticationService.config.UserAuthenticationProvider;
 import com.mjf.recipe.AuthenticationService.dtos.CredentialsDTO;
 import com.mjf.recipe.AuthenticationService.dtos.SignUpDTO;
 import com.mjf.recipe.AuthenticationService.dtos.UserDTO;
+import com.mjf.recipe.AuthenticationService.exceptions.AppException;
 import com.mjf.recipe.AuthenticationService.services.UserService;
+import com.mjf.recipe.AuthenticationService.utils.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +37,7 @@ public class AuthController {
     public ResponseEntity<UserDTO> register(@RequestBody @Valid SignUpDTO user) {
         UserDTO createdUser = userService.register(user);
         createdUser.setToken(userAuthenticationProvider.createToken(createdUser));
-        return ResponseEntity.created(URI.create("/users/" + createdUser.getId())).body(createdUser);
+        return ResponseEntity.created(URI.create("/user/" + createdUser.getId())).body(createdUser);
     }
 
     @GetMapping("/validate")
@@ -48,6 +51,29 @@ public class AuthController {
             response.put("error", "Invalid token");
         }
         return response;
+    }
+
+    @GetMapping("/user/{id}")
+    public UserDTO getUserById(@PathVariable Long id){
+        checkIsUserById(id);
+        return userService.findById(id);
+    }
+
+    @PatchMapping("/user/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO){
+        checkIsUserById(id);
+        checkIsUserById(userDTO.getId());
+
+        userService.patchUser(userDTO);
+        UserDTO updatedUser = userService.findById(id);
+        return ResponseEntity.created(URI.create("/user/" + updatedUser.getId())).body(updatedUser);
+    }
+
+    private void checkIsUserById(Long id){
+        UserDTO userDTO = userService.findById(id);
+        if(userDTO == null || !userDTO.getId().equals(AuthUtils.getAuthenticatedUserId())){
+            throw new AppException("Recipe doesn't exist or does not belong to this author", HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
