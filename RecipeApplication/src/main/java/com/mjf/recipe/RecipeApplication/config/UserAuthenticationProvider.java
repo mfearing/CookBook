@@ -1,22 +1,22 @@
 package com.mjf.recipe.RecipeApplication.config;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.mjf.recipe.RecipeApplication.dtos.UserDTO;
 import com.mjf.recipe.RecipeApplication.enums.Role;
 import com.mjf.recipe.RecipeApplication.exceptions.AppException;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Base64;
 import java.util.Collections;
 
@@ -24,29 +24,37 @@ import java.util.Collections;
 @Component
 public class UserAuthenticationProvider {
 
-    public Authentication validateTokenAndSetAuthentication(String token) throws IOException, InterruptedException {
+    @Value("classpath:keys/publicKey.pem")
+    private RSAPublicKey publicKey;
 
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://10.0.4.58:8181/validate")) //make this configurable
-                    .header("Authorization", "Bearer " + token)
-                    .GET().build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            JSONObject responseBody = new JSONObject(response.body());
+    private JWTVerifier verifier;
 
-            if(responseBody.getBoolean("valid")){
-                Base64.Decoder decoder = Base64.getUrlDecoder();
-                String[] chunks = token.split("\\.");
-                JSONObject jsonObject = new JSONObject(new String(decoder.decode(chunks[1])));
+    @PostConstruct
+    protected void init() {
+        Algorithm rsa256 = Algorithm.RSA256(publicKey, null);
+        this.verifier = JWT.require(rsa256).build();
+    }
 
-                UserDTO user = new UserDTO();
-                user.setLogin(jsonObject.getString("sub"));
-                user.setRole(Role.valueOf(jsonObject.getString("role")));
+    public Authentication validateTokenAndSetAuthentication(String token) throws InterruptedException {
 
-                return new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(user.getRole()));
-            }
+        try {
+            verifier.verify(token);
 
+            Base64.Decoder decoder = Base64.getUrlDecoder();
+            String[] chunks = token.split("\\.");
+            JSONObject jsonObject = new JSONObject(new String(decoder.decode(chunks[1])));
+
+            UserDTO user = UserDTO.builder()
+                    .login(jsonObject.getString("sub"))
+                    .role(Role.valueOf(jsonObject.getString("role")))
+                    .build();
+
+            return new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(user.getRole()));
+
+        } catch (JWTVerificationException e){
             throw new AppException("Unauthorized path", HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
 }

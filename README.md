@@ -4,7 +4,7 @@ Docker, and Kafka Message Broker were used to build this.
 
 ## AuthenticationService
 AuthenticationService application is based on Sergio Lema's authentication backend, with minor changes.  
-This application performs user logins, registration, and creation and validation of JWT tokens.  You can
+This application performs user logins, registration, and creation of JWT tokens.  You can
 view Sergio's code here:
 
 https://github.com/serlesen/fullstack-jwt/tree/chapter_3
@@ -19,6 +19,17 @@ This application holds published recipes.  It does not model the recipes.  Anyon
 recipes without logging in.  A user that is logged in will be able to clone a recipe into their account
 in the recipe application.  Users may not directly modify any recipe that's been published, but a user can
 re-publish a recipe to the CookBook to update it.
+
+## Generating RSA256 public and private keys
+I used git bash for the following commands.  Both keys go into the resources/keys directory of the AuthenticationService.
+All other apps get the public key in their same directory.
+
+openssl genrsa -out keypair.pem 2048
+
+openssl rsa -in keypair.pem -pubout -out publicKey.pem
+
+openssl pkcs8 -in keypair.pem -topk8 -nocrypt -inform PEM -outform PEM -out privateKey.pem
+
 
 ¯\_(ツ)_/¯
 

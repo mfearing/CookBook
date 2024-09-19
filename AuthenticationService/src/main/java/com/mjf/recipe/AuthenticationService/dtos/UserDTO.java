@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +17,7 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String login;
+    private Map<String, Object> preferences;
     private String token;
     private Role role;
 }

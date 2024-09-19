@@ -1,7 +1,6 @@
 package com.mjf.recipe.AuthenticationService.controllers;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.impl.ClaimsHolder;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.mjf.recipe.AuthenticationService.config.UserAuthenticationProvider;
 import com.mjf.recipe.AuthenticationService.dtos.CredentialsDTO;

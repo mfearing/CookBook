@@ -31,7 +31,7 @@ public class UserService {
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
         if(passwordEncoder.matches(CharBuffer.wrap(credentialsDTO.getPassword()), user.getPassword())){
-            return userMapper.toUserDto(user);
+            return userMapper.toUserDTO(user);
         }
         throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
     }
@@ -47,13 +47,13 @@ public class UserService {
         user.setRole(Role.USER);
 
         User savedUser = userRepository.save(user);
-        return userMapper.toUserDto(savedUser);
+        return userMapper.toUserDTO(savedUser);
     }
 
     public UserDTO findByLogin(String login){
         User user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
-        return userMapper.toUserDto(user);
+        return userMapper.toUserDTO(user);
     }
 
 

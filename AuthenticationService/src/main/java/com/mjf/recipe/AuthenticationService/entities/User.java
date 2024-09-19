@@ -40,4 +40,7 @@ public class User {
     @Size(max=50)
     private String password;
 
+    @Column(columnDefinition = "text")
+    private String preferences;
+
 }
