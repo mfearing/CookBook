@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Container, TextField, Button, CssBaseline } from "@mui/material";
 import useAuthContext from "../../hooks/use-auth-context";
 import { AuthContextType } from "../../context/auth";
+import { UnitType } from "../../types/enums/unitType";
 
 export default function RegisterPage(){
   const [firstName, setFirstName] = useState('');
@@ -22,7 +23,10 @@ export default function RegisterPage(){
               firstName: firstName,
               lastName: lastName,
               login: login,
-              password: password
+              password: password,
+              preferences: {
+                unitType: UnitType.standard
+              }
           });
           navigate('/');
         } else {
