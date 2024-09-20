@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,4 +24,7 @@ public class SignUpDTO {
 
     @NotEmpty
     private char[] password;
+
+    @NotEmpty
+    private Map<String, Object> preferences;
 }

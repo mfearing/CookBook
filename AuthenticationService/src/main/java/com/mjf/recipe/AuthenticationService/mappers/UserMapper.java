@@ -29,7 +29,7 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
-    @Mapping(target = "preferences", ignore = true)
+    @Mapping(target = "preferences", source = "preferences")
     User signUpToUser(SignUpDTO signUpDTO);
 
     // Custom method to map String (JSON) to Map<String, Object>
