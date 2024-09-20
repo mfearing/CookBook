@@ -45,7 +45,6 @@ public class UserAuthenticationProvider {
         Date now = new Date();
         Date validity = new Date(now.getTime() + 360000); // 10 min
 
-        //TODO consider changing to RSA256 asymmetric encryption for public key verification
         return JWT.create()
                 .withSubject(user.getLogin())
                 .withIssuedAt(now)

@@ -25,6 +25,11 @@ export default function Header(){
         setAnchorElMenu(null);
     };
 
+    const handlePrefBtnClick = () => {
+        setAnchorElMenu(null);
+        navigate('/user-account');
+    }
+
     const handleCloseMenu = () => {
         setAnchorElMenu(null);
     }
@@ -38,6 +43,7 @@ export default function Header(){
     }
 
     const menuItems = [
+        {label: 'User Account', action: handlePrefBtnClick},
         {label: 'Log Out', action: handleLoginBtnClick}
     ];
     const navigationList = [
@@ -78,7 +84,6 @@ export default function Header(){
 
     const initials = userLogin?.firstName.charAt(0).concat(userLogin?.lastName.charAt(0));
     
-    
     return (
         <AppBar position="static" style={{ top: 0 }} sx={{mx: "auto"}} >
             <Container >
@@ -88,7 +93,7 @@ export default function Header(){
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title={`${userLogin ? userLogin.firstName : "Log In"}`}>
+                        <Tooltip title={`${userLogin ? userLogin.firstName + " " + userLogin.lastName : "Log In"}`}>
                             <IconButton onClick={handleMenuClick} sx={{ p: 0 }}>
                                 <Avatar alt="user" src="">{initials}</Avatar>
                             </IconButton>

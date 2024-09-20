@@ -14,18 +14,6 @@ export default function DescriptionCardEdit({name, description, instructions, ha
     const [descriptionField, setDescriptionField] = useState(description);
     const [instructionsField, setInstructionsField] = useState(instructions);
 
-    const handleNameFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNameField(event.target.value);
-    }
-
-    const handleDescriptionFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDescriptionField(event.target.value);
-    }
-
-    const handleInstructionsFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInstructionsField(event.target.value);
-    }
-
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         handleSubmitRecipe(nameField, descriptionField, instructionsField);
@@ -45,9 +33,9 @@ export default function DescriptionCardEdit({name, description, instructions, ha
             >
                 {children ? children : <></>}
                 <FormControl fullWidth>
-                    <TextField id="name" label="Name" value={nameField} onChange={handleNameFieldChange} />
-                    <TextField multiline id="description" label="Description" rows={4} value={descriptionField} onChange={handleDescriptionFieldChange} />        
-                    <TextField multiline id="instructions" label="Instructions"  rows={4} value={instructionsField} onChange={handleInstructionsFieldChange} />
+                    <TextField id="name" label="Name" value={nameField} onChange={(event) => setNameField(event.target.value)} />
+                    <TextField multiline id="description" label="Description" rows={4} value={descriptionField} onChange={(event) => setDescriptionField(event.target.value)} />        
+                    <TextField multiline id="instructions" label="Instructions"  rows={4} value={instructionsField} onChange={(event) => setInstructionsField(event.target.value)} />
                 </FormControl>
             </Box>
         </>

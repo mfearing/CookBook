@@ -6,6 +6,7 @@ import LoginPage from "./pages/login/LoginPage";
 import RegisterPage from "./pages/login/RegisterPage";
 import MyRecipesPage from "./pages/myRecipes/MyRecipesPage";
 import CookBookPage from "./pages/cookBook/CookBookPage";
+import UserAccountPage from "./pages/account/UserAccountPage";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/cookBook",
         element: <CookBookPage />
+      },
+      {
+        path: "/user-account",
+        element: <UserAccountPage />
       }
     ]
   }
