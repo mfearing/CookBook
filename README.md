@@ -22,7 +22,6 @@ re-publish a recipe to the CookBook to update it.
 
 ## Generating RSA256 public and private keys
 I used git bash for the following commands.  Both keys go into the resources/keys directory of the AuthenticationService.
-All other apps get the public key in their same directory.
 
 openssl genrsa -out keypair.pem 2048
 
