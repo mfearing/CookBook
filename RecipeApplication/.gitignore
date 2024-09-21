@@ -29,8 +29,5 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### RSA Keys ###
-/src/main/resources/keys/
-
 ### VS Code ###
 .vscode/
