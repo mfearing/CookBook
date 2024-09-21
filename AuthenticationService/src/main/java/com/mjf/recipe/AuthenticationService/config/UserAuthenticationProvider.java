@@ -6,19 +6,20 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.mjf.recipe.AuthenticationService.dtos.UserDTO;
+import com.mjf.recipe.AuthenticationService.exceptions.AppException;
 import com.mjf.recipe.AuthenticationService.services.UserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Component
@@ -61,6 +62,17 @@ public class UserAuthenticationProvider {
         DecodedJWT decodedJWT = verifier.verify(token);
         UserDTO user = userService.findByLogin(decodedJWT.getSubject());
         return new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(user.getRole()));
+    }
+
+    public Map<String, String> getPublicKeyJWKS(){
+        try{
+            Map<String, String> jwk = new HashMap<>();
+            jwk.put("n", Base64.getUrlEncoder().encodeToString(publicKey.getModulus().toByteArray())); // Modulus
+            jwk.put("e", Base64.getUrlEncoder().encodeToString(publicKey.getPublicExponent().toByteArray())); // Exponent
+            return jwk;
+        } catch (Exception e){
+            throw new AppException("JWKS failed to generate", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

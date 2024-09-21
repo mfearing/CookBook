@@ -2,7 +2,7 @@ spring:
   datasource:
     platform: postgres
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://10.0.4.58:5432/cookbookdb #change to ip from localhost so container doesn't get confused
+    url: jdbc:postgresql://localhost:5432/cookbookdb #change to ip from localhost so container doesn't get confused
     username: backend
     password: backend
     initialization-mode: always
@@ -14,3 +14,7 @@ spring:
   kafka:
     consumer:
       group-id: cookbook-application
+
+auth:
+  service:
+    url: http://localhost:8181 #change to ip from localhost so container doesn't get confused

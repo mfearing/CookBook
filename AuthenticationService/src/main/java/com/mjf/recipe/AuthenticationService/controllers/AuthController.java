@@ -11,6 +11,8 @@ import com.mjf.recipe.AuthenticationService.services.UserService;
 import com.mjf.recipe.AuthenticationService.utils.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.util.Map;
 @RestController
 public class AuthController {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
     private final UserService userService;
     private final UserAuthenticationProvider userAuthenticationProvider;
 
@@ -67,6 +70,12 @@ public class AuthController {
         userService.patchUser(userDTO);
         UserDTO updatedUser = userService.findById(id);
         return ResponseEntity.created(URI.create("/user/" + updatedUser.getId())).body(updatedUser);
+    }
+
+    @GetMapping("/auth/public-key")
+    public ResponseEntity<Map<String, String>> getPublicJWKS(){
+        log.info("Made it to auth/public-key!");
+        return ResponseEntity.ok(userAuthenticationProvider.getPublicKeyJWKS());
     }
 
     private void checkIsUserById(Long id){
