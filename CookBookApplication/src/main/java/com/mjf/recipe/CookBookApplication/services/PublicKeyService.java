@@ -23,6 +23,9 @@ import java.util.Map;
 
 /*
 TODO: this design currently requires the service to be restarted.  Implementing key rotation can get around a restart.
+
+Also, this will likely be replaced in the future by a Spring Cloud Gateway that handles verification before a request
+ever hits the microservice.
  */
 @Service
 @RequiredArgsConstructor
@@ -40,13 +43,10 @@ public class PublicKeyService {
     private RSAPublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
         String url = authServiceUrl + "/auth/public-key";
         Map<String, String> response = (Map<String, String>) restTemplate.getForObject(url, Map.class);
-        logger.info("got response back");
 
         assert response != null;
         byte[] modulusBytes = Base64.getUrlDecoder().decode(response.get("n"));
         byte[] exponentBytes = Base64.getUrlDecoder().decode(response.get("e"));
-
-        logger.info("get byes for modulus and exponent");
 
         BigInteger modulus = new BigInteger(1, modulusBytes);
         BigInteger exponent = new BigInteger(1, exponentBytes);
@@ -54,13 +54,11 @@ public class PublicKeyService {
         RSAPublicKeySpec spec = new RSAPublicKeySpec(modulus, exponent);
         KeyFactory factory = KeyFactory.getInstance("RSA");
 
-        logger.info("built key factor");
 
         return (RSAPublicKey) factory.generatePublic(spec);
     }
 
     private RSAPublicKey getRSAPublicKey() {
-        logger.info("getRSAPublicKey");
         try {
             if (publicKey == null) {
                 publicKey = getPublicKey();
@@ -73,7 +71,6 @@ public class PublicKeyService {
     }
 
     public JWTVerifier getVerifier() {
-        logger.info("getVerifier");
         if (verifier == null) {
             Algorithm rsa256 = Algorithm.RSA256(getRSAPublicKey(), null);
             this.verifier = JWT.require(rsa256).build();
