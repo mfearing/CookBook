@@ -21,7 +21,7 @@ function AuthProvider({children}: {children: ReactNode}) {
     //api - couldn't separate this out without circular dependency?
     const api = useMemo(() => { //useMemo will memoize all method calls
         const instance = axios.create({
-            baseURL: 'http://localhost:8181'
+            baseURL: 'http://localhost:8181/auth'
         });
     
         instance.interceptors.request.use((config) => {
