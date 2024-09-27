@@ -15,6 +15,10 @@ spring:
     consumer:
       group-id: recipe-application
 
+server:
+  servlet:
+    context-path: /v1
+
 auth:
   service:
     url: http://localhost:8181 #change to ip from localhost so container doesn't get confused
