@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/recipe")
+@RequestMapping("/recipes")
 public class RecipeController {
     private static final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 

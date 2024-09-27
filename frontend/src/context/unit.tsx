@@ -17,7 +17,7 @@ function UnitProvider({children}: {children: ReactNode}){
 
     const fetchUnits = useCallback(async(): Promise<void> => {
         try{
-            const response = await recipeApi.get("/unit");
+            const response = await recipeApi.get("/units");
             setUnits(response.data);
         } catch (error){
             // console.log(error);
@@ -26,7 +26,7 @@ function UnitProvider({children}: {children: ReactNode}){
 
     const deleteUnit = async(id: number): Promise<void> => {
         try{
-            const response = await recipeApi.delete(`/unit/${id}`);
+            const response = await recipeApi.delete(`/units/${id}`);
             if(response.status === 200){
                 const updatedUnits = units?.filter((unit) => {
                     return unit.id !== id; 
@@ -40,7 +40,7 @@ function UnitProvider({children}: {children: ReactNode}){
 
     const addUnit = async(unit: UnitDetails): Promise<void> => {
         try{
-            const response = await recipeApi.post(`/unit`, unit);
+            const response = await recipeApi.post(`/units`, unit);
             if(response.status === 200){
                 const updatedUnits = [
                     ...units,

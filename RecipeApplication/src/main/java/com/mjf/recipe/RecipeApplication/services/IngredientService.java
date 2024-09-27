@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class IngredientService {
         return ingredientRepository.findById(id);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public Ingredient save(Ingredient ingredient){
         if(ingredientRepository.findByName(ingredient.getName()).isPresent()){
             throw new AppException("Ingredient " + ingredient.getName() + " already exists.", HttpStatus.BAD_REQUEST);

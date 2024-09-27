@@ -23,6 +23,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
@@ -72,7 +73,7 @@ public class AuthController {
         return ResponseEntity.created(URI.create("/user/" + updatedUser.getId())).body(updatedUser);
     }
 
-    @GetMapping("/auth/public-key")
+    @GetMapping("/public-key")
     public ResponseEntity<Map<String, String>> getPublicJWKS(){
         log.info("Made it to auth/public-key!");
         return ResponseEntity.ok(userAuthenticationProvider.getPublicKeyJWKS());
