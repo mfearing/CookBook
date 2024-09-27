@@ -41,7 +41,7 @@ public class PublicKeyService {
     private String authServiceUrl;
 
     private RSAPublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        String url = authServiceUrl + "/auth/public-key";
+        String url = authServiceUrl + "/v1/auth/public-key";
         Map<String, String> response = (Map<String, String>) restTemplate.getForObject(url, Map.class);
 
         assert response != null;

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class UnitService {
         return unitRepository.findById(id);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public Unit save(Unit unit){
         if(unitRepository.findByName(unit.getName()).isPresent()){
             throw new AppException("Unit " + unit.getName() + " already exists", HttpStatus.BAD_REQUEST);
@@ -43,7 +44,6 @@ public class UnitService {
 
     @Transactional
     public List<Unit> saveAll(List<Unit> units){
-
         List<String> namesToCreate = units.stream().map(Unit::getName).toList();
         List<Unit> existingUnits = unitRepository.findAllByNameIn(namesToCreate);
         Set<String> existingUnitNames = existingUnits.stream().map(Unit::getName).collect(Collectors.toSet());
