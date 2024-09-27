@@ -28,7 +28,7 @@ function RecipeProvider({children}: {children: ReactNode}){
 
     const fetchSummaryRecipes = useCallback(async(): Promise<void> => {
         try{
-            const response = await recipeApi.get("/recipe/summary");
+            const response = await recipeApi.get("/recipes/summary");
             setRecipeSummaries(response.data);
         } catch (error) {
             //console.log(error);
@@ -49,7 +49,7 @@ function RecipeProvider({children}: {children: ReactNode}){
                 recipeIngredients: []
             }
 
-            const response = await recipeApi.post(`/recipe`, newRecipe);
+            const response = await recipeApi.post(`/recipes`, newRecipe);
             fetchSummaryRecipes();
             setRecipe(response.data);
 
@@ -61,7 +61,7 @@ function RecipeProvider({children}: {children: ReactNode}){
     const deleteRecipe = async(id: number | null): Promise<void> => {
         try{
             if(id != null){
-                await recipeApi.delete(`/recipe/${id}`);
+                await recipeApi.delete(`/recipes/${id}`);
                 fetchSummaryRecipes();
                 setRecipe(null);
             }
@@ -72,7 +72,7 @@ function RecipeProvider({children}: {children: ReactNode}){
 
     const publishRecipe = async(id: number): Promise<void> => {
         try{
-            await recipeApi.get(`/recipe/${id}/publish`);
+            await recipeApi.get(`/recipes/${id}/publish`);
         } catch (error){
             console.log(error);
         }
@@ -80,7 +80,7 @@ function RecipeProvider({children}: {children: ReactNode}){
 
     const fetchRecipeById = async(id: number): Promise<void> => {
         try{
-            const response = await recipeApi.get(`/recipe/${id}`);
+            const response = await recipeApi.get(`/recipes/${id}`);
             setRecipe({...response.data});
         } catch (error) {
             //console.log(error);
@@ -102,7 +102,7 @@ function RecipeProvider({children}: {children: ReactNode}){
                 recipeIngredients: recipe.recipeIngredients
             }
 
-            const response = await recipeApi.patch(`/recipe/${recipe.id}`, recipePatch);
+            const response = await recipeApi.patch(`/recipes/${recipe.id}`, recipePatch);
             fetchSummaryRecipes();
             setRecipe(response.data);
 
@@ -121,8 +121,8 @@ function RecipeProvider({children}: {children: ReactNode}){
         }]
 
         try{
-            await recipeApi.post(`recipe/${recipeId}/ingredients`, ri);
-            const response = await recipeApi.get(`/recipe/${recipeId}`);
+            await recipeApi.post(`recipes/${recipeId}/ingredients`, ri);
+            const response = await recipeApi.get(`/recipes/${recipeId}`);
             setRecipe(response.data); //refreshes recipe due to change in ingredients
         } catch (error) {
             console.log(error);
@@ -131,8 +131,8 @@ function RecipeProvider({children}: {children: ReactNode}){
 
     const deleteRecipeIngredient = async(recipeId: number, ingredientId: number): Promise<void> => {
         try{
-            await recipeApi.delete(`/recipe/${recipeId}/ingredients/${ingredientId}`);
-            const response = await recipeApi.get(`/recipe/${recipeId}`);
+            await recipeApi.delete(`/recipes/${recipeId}/ingredients/${ingredientId}`);
+            const response = await recipeApi.get(`/recipes/${recipeId}`);
             setRecipe(response.data); //refreshes recipe due to change in ingredients
         } catch(error){
             //console.log(error);
