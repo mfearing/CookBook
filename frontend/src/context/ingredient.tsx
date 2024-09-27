@@ -17,7 +17,7 @@ function IngredientProvider({children}: {children: ReactNode}){
 
     const fetchIngredients = useCallback(async(): Promise<void> => { //do i need to have this if the api is using useMemo?
         try{
-            const response = await recipeApi.get('/ingredient');
+            const response = await recipeApi.get('/ingredients');
             setIngredients(response.data);
         } catch (error) {
             //console.log(error);
@@ -26,7 +26,7 @@ function IngredientProvider({children}: {children: ReactNode}){
 
     const deleteIngredient = async(id: number): Promise<void> => {
         try{
-            const response = await recipeApi.delete(`/ingredient/${id}`);
+            const response = await recipeApi.delete(`/ingredients/${id}`);
             if(response.status === 200){
                 const updatedIngredients = ingredients?.filter((ingredient) => {
                     return ingredient.id !== id; 
@@ -40,7 +40,7 @@ function IngredientProvider({children}: {children: ReactNode}){
 
     const addIngredient = async(ingredient: IngredientDetails): Promise<void> => {
         try{
-            const response = await recipeApi.post(`/ingredient`, ingredient);
+            const response = await recipeApi.post(`/ingredients`, ingredient);
             if(response.status === 200){
                 const updatedIngredients = [
                     ...ingredients,
