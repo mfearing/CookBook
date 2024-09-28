@@ -17,7 +17,7 @@ spring:
 
 server:
   servlet:
-    context-path: /v1
+    context-path: /v1/cb
 
 auth:
   service:
