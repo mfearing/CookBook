@@ -28,7 +28,6 @@ function AuthProvider({children}: {children: ReactNode}) {
             if(userLogin?.token){
                 config.headers['Authorization'] = `Bearer ${userLogin?.token}`;
             }
-            config.headers['Access-Control-Allow-Origin'] = "*";
             return config;
         });
     
