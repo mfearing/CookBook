@@ -75,7 +75,6 @@ public class AuthController {
 
     @GetMapping("/public-key")
     public ResponseEntity<Map<String, String>> getPublicJWKS(){
-        log.info("Made it to auth/public-key!");
         return ResponseEntity.ok(userAuthenticationProvider.getPublicKeyJWKS());
     }
 

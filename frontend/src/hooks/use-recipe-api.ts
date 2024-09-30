@@ -7,7 +7,7 @@ export default function useRecipeApi() {
 
     const api = useMemo(() => { //useMemo will memoize all method calls
         const instance = axios.create({
-            baseURL: 'http://localhost:8282/v1'
+            baseURL: 'http://localhost:8081/v1/rcp'
         });
 
         instance.interceptors.request.use((config) => {

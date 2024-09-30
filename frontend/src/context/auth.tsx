@@ -21,13 +21,14 @@ function AuthProvider({children}: {children: ReactNode}) {
     //api - couldn't separate this out without circular dependency?
     const api = useMemo(() => { //useMemo will memoize all method calls
         const instance = axios.create({
-            baseURL: 'http://localhost:8181/v1/auth'
+            baseURL: 'http://localhost:8081/v1/auth'
         });
     
         instance.interceptors.request.use((config) => {
             if(userLogin?.token){
                 config.headers['Authorization'] = `Bearer ${userLogin?.token}`;
             }
+            config.headers['Access-Control-Allow-Origin'] = "*";
             return config;
         });
     
