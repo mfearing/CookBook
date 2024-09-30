@@ -7,7 +7,7 @@ export default function useCookBookApi() {
 
     const api = useMemo(() => { //useMemo will memoize all method calls
         const instance = axios.create({
-            baseURL: 'http://localhost:8383/v1'
+            baseURL: 'http://localhost:8081/v1/cb'
         });
 
         instance.interceptors.request.use((config) => {
