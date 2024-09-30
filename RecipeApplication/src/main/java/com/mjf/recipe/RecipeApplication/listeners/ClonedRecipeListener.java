@@ -6,6 +6,7 @@ import com.mjf.recipe.RecipeApplication.dtos.ClonedRecipeDTO;
 import com.mjf.recipe.RecipeApplication.entities.Recipe;
 import com.mjf.recipe.RecipeApplication.entities.RecipeIngredient;
 import com.mjf.recipe.RecipeApplication.exceptions.AppException;
+import com.mjf.recipe.RecipeApplication.services.IngredientService;
 import com.mjf.recipe.RecipeApplication.services.RecipeIngredientService;
 import com.mjf.recipe.RecipeApplication.services.RecipeService;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,7 @@ public class ClonedRecipeListener {
     private final ObjectMapper objectMapper;
     private final RecipeService recipeService;
     private final RecipeIngredientService recipeIngredientService;
+    private final IngredientService ingredientService;
 
     @KafkaListener(topics = "recipe.clone")
     public String listens(String in){
@@ -47,7 +49,7 @@ public class ClonedRecipeListener {
             //cannot save recipe ingredients without getting the new recipe id, so we save that first
             Recipe newRecipe = recipeService.save(clonedRecipe);
 
-            //now save the recipe ingredients
+            //TODO: Bug here if the ingredient or unit no longer exists in the database!
             recipeIngredientService.saveAll(
                 pruneRecipeIngredientIDs(clone.getRecipeData().getRecipeIngredients(), newRecipe.getId())
             );
