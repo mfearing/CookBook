@@ -10,7 +10,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
     hibernate:
-      ddl-auto: create
+      ddl-auto:
   kafka:
     consumer:
       group-id: cookbook-application
@@ -21,4 +21,4 @@ server:
 
 auth:
   service:
-    url: http://localhost:8181 #change to ip from localhost so container doesn't get confused
+    url: http://authenticationservice:8080 #change to ip from localhost so container doesn't get confused

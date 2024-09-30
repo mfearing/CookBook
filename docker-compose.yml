@@ -26,8 +26,8 @@ services:
   authenticationservice:
     build: ./AuthenticationService
     container_name: authenticationservice
-    ports:
-      - "8181:8080"
+    expose:
+      - "8181"
     environment:
       SPRING_PROFILES_ACTIVE: 'production'
 
@@ -37,8 +37,8 @@ services:
     container_name: recipeapplication
     depends_on:
       - broker
-    ports:
-      - "8282:8080"
+    expose:
+      - "8282"
     environment:
       SPRING_PROFILES_ACTIVE: 'production'
       DEVTIRO_KAFKA_TOPIC: 'recipe.published'
@@ -50,8 +50,8 @@ services:
     container_name: cookbookapplication
     depends_on:
       - broker
-    ports:
-      - "8383:8080"
+    expose:
+      - "8383"
     environment:
       SPRING_PROFILES_ACTIVE: 'production'
       DEVITRO_KAFKA_CLONE_TOPIC: 'recipe.clone'

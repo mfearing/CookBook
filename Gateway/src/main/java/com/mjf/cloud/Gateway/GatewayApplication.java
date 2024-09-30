@@ -15,17 +15,17 @@ public class GatewayApplication {
 				.route(p -> p
 						.path("/v1/auth/**")
 						.filters(f -> f.addRequestHeader("Hello", "Auth"))
-						.uri("http://10.0.4.58:8181") // the authentication service port
+						.uri("http://authenticationservice:8080") // the authentication service port
 				)
 				.route(p -> p
 						.path("/v1/rcp/**")
 						.filters(f -> f.addRequestHeader("Hello", "Rcp"))
-						.uri("http://10.0.4.58:8282") // the authentication service port
+						.uri("http://recipeservice:8080") // the authentication service port
 				)
 				.route(p -> p
 						.path("/v1/cb/**")
 						.filters(f -> f.addRequestHeader("Hello", "Cb"))
-						.uri("http://10.0.4.58:8383") // the authentication service port
+						.uri("http://cookbookapplication:8080") // the authentication service port
 				)
 
 				.build();
