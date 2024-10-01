@@ -16,21 +16,20 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfig {
 
     private final UserAuthenticationEntryPoint userAuthenticationEntryPoint;
-    private final UserAuthenticationProvider userAuthenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(userAuthenticationEntryPoint))
-                .addFilterBefore(new JwtAuthFilter(userAuthenticationProvider), BasicAuthenticationFilter.class)
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .addFilterBefore(new JwtAuthFilter(), BasicAuthenticationFilter.class)
+                .csrf(AbstractHttpConfigurer::disable) //using JWT tokens
+                .cors(AbstractHttpConfigurer::disable) //configured in the gateway
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/published", "/published/**").permitAll()
-                        .requestMatchers("/published/{id}/clone").authenticated()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/v1/cb/published", "/v1/cb/published/**").permitAll() //open endpoints
+                        .requestMatchers("/v1/cb/published/{id}/clone").authenticated() //authenticated endpoints
+                        .anyRequest().permitAll() //any others
                 );
         return http.build();
     }

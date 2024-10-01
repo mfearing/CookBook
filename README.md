@@ -2,6 +2,11 @@
 This web application uses microservices to build recipes.  Java 17, Spring Framework/Spring Boot, PostgreSQL, React,
 Docker, and Kafka Message Broker were used to build this.
 
+## Gateway
+Spring Cloud Gateway that acts as a single point of contact for requests from the client to the services that
+are behind it.  Gateway also handles JWT verification, passing header values for users and roles to the services
+as necessary.
+
 ## AuthenticationService
 AuthenticationService application is based on Sergio Lema's authentication backend, with minor changes.  
 This application performs user logins, registration, and creation of JWT tokens.  You can
