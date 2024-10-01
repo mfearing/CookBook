@@ -1,14 +1,12 @@
-package com.mjf.recipe.RecipeApplication.services;
+package com.mjf.cloud.Gateway.services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.mjf.recipe.RecipeApplication.exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,12 +19,6 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 import java.util.Map;
 
-/*
-TODO: this design currently requires the service to be restarted.  Implementing key rotation can get around a restart.
-
-Also, this will likely be replaced in the future by a Spring Cloud Gateway that handles verification before a request
-ever hits the microservice.
- */
 @Service
 @RequiredArgsConstructor
 public class PublicKeyService {
@@ -65,7 +57,7 @@ public class PublicKeyService {
             return publicKey;
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e){
             logger.info("went wrong in getRSAPublicKey");
-            throw new AppException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e.getMessage(), e.getCause());
         }
     }
 

@@ -1,10 +1,10 @@
-package com.mjf.recipe.RecipeApplication.config;
+package com.mjf.cloud.Gateway.config;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.mjf.recipe.RecipeApplication.dtos.UserDTO;
-import com.mjf.recipe.RecipeApplication.enums.Role;
-import com.mjf.recipe.RecipeApplication.exceptions.AppException;
-import com.mjf.recipe.RecipeApplication.services.PublicKeyService;
+import com.mjf.cloud.Gateway.dtos.UserDTO;
+import com.mjf.cloud.Gateway.enums.Role;
+import com.mjf.cloud.Gateway.exceptions.AppException;
+import com.mjf.cloud.Gateway.services.PublicKeyService;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -20,6 +20,15 @@ import java.util.Collections;
 public class UserAuthenticationProvider {
 
     private PublicKeyService publicKeyService;
+
+    public boolean validateToken(String token){
+        try {
+            publicKeyService.getVerifier().verify(token);
+            return true;
+        } catch (JWTVerificationException e){
+            throw new AppException("Unauthorized path", HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     public Authentication validateTokenAndSetAuthentication(String token) throws InterruptedException {
 
