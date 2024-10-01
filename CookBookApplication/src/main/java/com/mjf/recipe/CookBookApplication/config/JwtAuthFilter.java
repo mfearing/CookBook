@@ -2,14 +2,11 @@ package com.mjf.recipe.CookBookApplication.config;
 
 import com.mjf.recipe.CookBookApplication.dtos.UserDTO;
 import com.mjf.recipe.CookBookApplication.enums.Role;
-import com.mjf.recipe.CookBookApplication.exceptions.AppException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,7 +22,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse,
             FilterChain filterChain) throws ServletException, IOException {
-        String header = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
         String userName = httpServletRequest.getHeader("X-User-Name");
         String userRole = httpServletRequest.getHeader("X-User-Role");
@@ -41,7 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         } else {
             SecurityContextHolder.clearContext();
-            throw new AppException("User name and role are missing", HttpStatus.UNAUTHORIZED);
+            //throw new AppException("User name and role are missing", HttpStatus.UNAUTHORIZED);
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);

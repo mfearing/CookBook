@@ -68,7 +68,6 @@ public class UserService {
 
     @Transactional
     public User patchUser(UserDTO userDTO){
-        logger.info(String.valueOf(userDTO.getId()));
         Optional<User> user = userRepository.findById(userDTO.getId());
         if(user.isPresent()){
             User existing = user.get();

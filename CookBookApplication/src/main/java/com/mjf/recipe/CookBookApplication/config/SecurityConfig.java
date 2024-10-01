@@ -27,9 +27,9 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable) //configured in the gateway
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/published", "/published/**").permitAll()
-                        .requestMatchers("/published/{id}/clone").authenticated()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/v1/cb/published", "/v1/cb/published/**").permitAll() //open endpoints
+                        .requestMatchers("/v1/cb/published/{id}/clone").authenticated() //authenticated endpoints
+                        .anyRequest().permitAll() //any others
                 );
         return http.build();
     }

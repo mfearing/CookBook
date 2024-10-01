@@ -2,13 +2,10 @@ package com.mjf.cloud.Gateway.config;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.mjf.cloud.Gateway.exceptions.AppException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -42,8 +39,8 @@ public class JwtAuthFilter implements WebFilter {
                                 .build();
                     }
                 } catch (RuntimeException e) {
-                    //SecurityContextHolder.clearContext(); //we don't currently need security context in gateway
-                    return Mono.error(new AppException(e.getMessage(), HttpStatus.UNAUTHORIZED));
+                    logger.debug("token invalid at gateway");
+                    //return Mono.error(new AppException(e.getMessage(), HttpStatus.UNAUTHORIZED));
                 }
             }
         }

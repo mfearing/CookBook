@@ -59,14 +59,17 @@ public class AuthController {
 
     @GetMapping("/user/{id}")
     public UserDTO getUserById(@PathVariable Long id){
-        checkIsUserById(id);
-        return userService.findById(id);
+        UserDTO user = userService.findById(id);
+        checkIsUser(id, user);
+        return user;
     }
 
     @PatchMapping("/user/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO){
-        checkIsUserById(id);
-        checkIsUserById(userDTO.getId());
+        checkIsUser(id, userDTO);
+        if(!id.equals(userDTO.getId())){
+            throw new AppException("Account being modified does not belong to this author", HttpStatus.BAD_REQUEST);
+        }
 
         userService.patchUser(userDTO);
         UserDTO updatedUser = userService.findById(id);
@@ -78,11 +81,21 @@ public class AuthController {
         return ResponseEntity.ok(userAuthenticationProvider.getPublicKeyJWKS());
     }
 
-    private void checkIsUserById(Long id){
-        UserDTO userDTO = userService.findById(id);
-        if(userDTO == null || !userDTO.getId().equals(AuthUtils.getAuthenticatedUserId())){
-            throw new AppException("Recipe doesn't exist or does not belong to this author", HttpStatus.BAD_REQUEST);
+    //the spring context, the id, and the user dto all need to be the same
+    //TODO: Should we include user id in the claims of the JWT?  Would make this easier.
+    private void checkIsUser(Long id, UserDTO userDTO){
+        UserDTO existing = userService.findById(id);
+        String authLogin = AuthUtils.getAuthenticatedUserLogin();
+        if(existing == null || //user from id has to exist
+            !existing.getLogin().equals(authLogin) || //user from id has to match principal
+            !userDTO.getLogin().equals(authLogin) || //userDTO from payload has to match principal
+            !existing.getId().equals(id) //user from id has to match userDTO from payload
+        ){
+            log.info("User id: {}, authenticated user id: {}", userDTO.getLogin(), authLogin);
+            throw new AppException("Account does not belong to this author", HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
 }

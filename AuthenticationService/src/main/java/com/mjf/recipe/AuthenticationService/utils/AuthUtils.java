@@ -13,12 +13,4 @@ public class AuthUtils {
         return null;
     }
 
-    public static Long getAuthenticatedUserId(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(principal instanceof UserDTO){
-            return ((UserDTO) principal).getId();
-        }
-        return null;
-    }
-
 }

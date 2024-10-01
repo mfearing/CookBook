@@ -28,8 +28,9 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/user/", "/user/**").authenticated()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/v1/auth/**").permitAll() //open endpoints
+                        .requestMatchers("/v1/auth/user", "/v1/auth/user/**").authenticated() //authenticated endpoints
+                        .anyRequest().permitAll() //any others
                 );
         return http.build();
     }
