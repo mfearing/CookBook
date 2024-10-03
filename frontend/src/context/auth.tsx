@@ -79,7 +79,8 @@ function AuthProvider({children}: {children: ReactNode}) {
         }
     }
 
-    const logUserOut = () => {
+    const logUserOut = async() => {
+        await api.post(`/logout`);
         setUserLogin(null);
     };
 
