@@ -7,6 +7,7 @@ import com.mjf.recipe.AuthenticationService.dtos.CredentialsDTO;
 import com.mjf.recipe.AuthenticationService.dtos.SignUpDTO;
 import com.mjf.recipe.AuthenticationService.dtos.UserDTO;
 import com.mjf.recipe.AuthenticationService.exceptions.AppException;
+import com.mjf.recipe.AuthenticationService.services.RedisService;
 import com.mjf.recipe.AuthenticationService.services.UserService;
 import com.mjf.recipe.AuthenticationService.utils.AuthUtils;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +30,7 @@ public class AuthController {
 
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
     private final UserService userService;
+    private final RedisService redisService;
     private final UserAuthenticationProvider userAuthenticationProvider;
 
     @PostMapping("/login")
@@ -44,17 +47,17 @@ public class AuthController {
         return ResponseEntity.created(URI.create("/user/" + createdUser.getId())).body(createdUser);
     }
 
-    @GetMapping("/validate")
-    public Map<String, Object> validateToken(@RequestHeader("Authorization") String token) {
-        Map<String, Object> response = new HashMap<>();
-        try{
+    @PostMapping("/logout")
+    public ResponseEntity<String> blacklistToken(@RequestHeader("Authorization") String token){
+        try {
             DecodedJWT decodedJWT = userAuthenticationProvider.validateToken(token);
-            response.put("valid", true);
-        } catch (JWTVerificationException exception) {
-            response.put("valid", false);
-            response.put("error", "Invalid token");
+            long currentTime = new Date().getTime();
+            long expiresAt = decodedJWT.getExpiresAt().getTime();
+            redisService.blacklistToken(decodedJWT.getToken(), expiresAt - currentTime + 1000); //one second of leeway
+        } catch (JWTVerificationException e){
+            //eat exception because token isn't valid anyway
         }
-        return response;
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/user/{id}")
@@ -82,14 +85,13 @@ public class AuthController {
     }
 
     //the spring context, the id, and the user dto all need to be the same
-    //TODO: Should we include user id in the claims of the JWT?  Would make this easier.
+    //TODO: Should we include user id in the Headers from the gateway?  Would make this easier.
     private void checkIsUser(Long id, UserDTO userDTO){
         UserDTO existing = userService.findById(id);
         String authLogin = AuthUtils.getAuthenticatedUserLogin();
         if(existing == null || //user from id has to exist
-            !existing.getLogin().equals(authLogin) || //user from id has to match principal
-            !userDTO.getLogin().equals(authLogin) || //userDTO from payload has to match principal
-            !existing.getId().equals(id) //user from id has to match userDTO from payload
+            !userDTO.getLogin().equals(authLogin) || //userDTO from payload has to match principal on login
+            !existing.getId().equals(userDTO.getId()) //user from id has to match userDTO from payload
         ){
             log.info("User id: {}, authenticated user id: {}", userDTO.getLogin(), authLogin);
             throw new AppException("Account does not belong to this author", HttpStatus.BAD_REQUEST);
