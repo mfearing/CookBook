@@ -33,6 +33,21 @@ public class PublishedRecipeController {
         return publishedRecipeService.findPublishedRecipeDTOById(id);
     }
 
+    @DeleteMapping("/{id}")
+    public PublishedRecipeDTO deletePublishedRecipeById(@PathVariable long id){
+        if(CookBookUtils.isAuthenticatedUserAdmin()){
+            PublishedRecipeDTO publishedRecipeDTO = publishedRecipeService.findPublishedRecipeDTOById(id);
+            if(publishedRecipeDTO != null){
+                publishedRecipeService.deleteById(id);
+                return publishedRecipeDTO;
+            } else {
+                throw new AppException("Published Recipe not found.", HttpStatus.FORBIDDEN);
+            }
+        } else {
+            throw new AppException("Insufficient permissions to delete published recipe", HttpStatus.FORBIDDEN);
+        }
+    }
+
     @GetMapping("/{id}/clone")
     public void clonePublishedRecipe(@PathVariable long id){
         PublishedRecipeDTO recipe = publishedRecipeService.findPublishedRecipeDTOById(id);

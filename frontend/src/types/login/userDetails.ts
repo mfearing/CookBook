@@ -7,5 +7,7 @@ export default interface UserDetails{
     login: string,
     preferences: UserPreferences,
     token: string,
+    createdAt: Date,
+    modifiedAt: Date,
     role: string
 }

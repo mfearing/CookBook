@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.CharBuffer;
+import java.util.Date;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -48,6 +49,8 @@ public class UserService {
         }
 
         User user = userMapper.signUpToUser(signUpDTO);
+        user.setCreatedAt(new Date());
+        user.setUpdatedAt(new Date());
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(signUpDTO.getPassword())));
         user.setRole(Role.USER);
 
@@ -67,7 +70,7 @@ public class UserService {
     }
 
     @Transactional
-    public User patchUser(UserDTO userDTO){
+    public void patchUser(UserDTO userDTO){
         Optional<User> user = userRepository.findById(userDTO.getId());
         if(user.isPresent()){
             User existing = user.get();
@@ -84,9 +87,11 @@ public class UserService {
                 existing.setPreferences(userMapper.mapMapToString(userDTO.getPreferences()));
             }
 
-            return userRepository.saveAndFlush(existing);
+            existing.setUpdatedAt(new Date());
+            userRepository.saveAndFlush(existing);
+        } else {
+            throw new AppException("User patch failed.  User not found", HttpStatus.BAD_REQUEST);
         }
-        throw  new AppException("User patch failed.  User not found", HttpStatus.BAD_REQUEST);
     }
 
 

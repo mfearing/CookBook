@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -39,6 +41,12 @@ public class User {
     @Column(nullable = false)
     @Size(max=50)
     private String password;
+
+    @Column
+    private Date createdAt;
+
+    @Column
+    private Date updatedAt;
 
     @Column(columnDefinition = "text")
     private String preferences;
