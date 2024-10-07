@@ -26,6 +26,10 @@ public class PublishedRecipeService {
         return publishedRecipeRepository.findById(id);
     }
 
+    public void deleteById(Long id){
+        publishedRecipeRepository.deleteById(id);
+    }
+
     public PublishedRecipeDTO findByIdAndAuthor(Long id, String author){
         Optional<PublishedRecipe> recipe = publishedRecipeRepository.findByIdAndAuthor(id, author);
         return recipe.map(this::mapPublishedRecipeToDTO).orElse(null);
