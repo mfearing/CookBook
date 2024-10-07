@@ -9,7 +9,7 @@ import PublishedRecipeDetails from "../../../types/cookbook/publisedRecipeDetail
 export default function CookBookLayout() {
     const [selectedRecipe, setSelectedRecipe] = useState<PublishedRecipeDetails | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const {publishedRecipes, fetchPublishedRecipesByName, clonePublishedRecipe} = useCookBookContext() as CookBookContextType;
+    const {publishedRecipes, fetchPublishedRecipesByName, deletePublishedRecipe, clonePublishedRecipe} = useCookBookContext() as CookBookContextType;
    
 
     const handleSearchClick = (event: React.FormEvent) => {
@@ -37,6 +37,10 @@ export default function CookBookLayout() {
         }
     }
 
+    const handleDeleteClick = async (id: number) => {
+        deletePublishedRecipe(id);
+    }
+
     const cards = publishedRecipes.map((pr) => {
         return (
             <Grid item xs={4}> 
@@ -45,6 +49,7 @@ export default function CookBookLayout() {
                     name={pr.recipeData.name} 
                     description={pr.recipeData.description}
                     handleClick={handleRecipeCardClick}
+                    handleDelete={handleDeleteClick}
                 />
             </Grid>
         );

@@ -38,7 +38,7 @@ function AuthProvider({children}: {children: ReactNode}) {
             (error) => {
                 if(error.response && error.response.status === 401){
                     alert("Your user session has expired, please log in.");
-                    logUserOut();
+                    setUserLogin(null);
                 }
                 return Promise.reject(error);
             }

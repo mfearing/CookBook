@@ -5,7 +5,8 @@ import PublishedRecipeDetails from "../types/cookbook/publisedRecipeDetails";
 export interface CookBookContextType {
     publishedRecipes: PublishedRecipeDetails[] | [],
     fetchPublishedRecipes: () => Promise<void>,
-    fetchPublishedRecipesByName: (searchTerm: string) => Promise<void>
+    fetchPublishedRecipesByName: (searchTerm: string) => Promise<void>,
+    deletePublishedRecipe: (id: number) => Promise<void>,
     clonePublishedRecipe: (id: number) => Promise<boolean>
 }
 
@@ -43,9 +44,19 @@ function CookBookProvider({children}: {children: ReactNode}){
         return false;
     }
 
+    const deletePublishedRecipe = async(id: number): Promise<void> => {
+        try{
+            await cookbookApi.delete(`/published/${id}`);
+            //not sure i like this fix...should be re-fetching in case the delete fails.
+            setPublishedRecipes(publishedRecipes.filter(item => item.id !== id));
+        } catch(error){
+            console.log(error);
+        }
+    }
+
 
     return (
-        <CookBookContext.Provider value = {{publishedRecipes, fetchPublishedRecipes, fetchPublishedRecipesByName, clonePublishedRecipe}}>
+        <CookBookContext.Provider value = {{publishedRecipes, fetchPublishedRecipes, fetchPublishedRecipesByName, deletePublishedRecipe, clonePublishedRecipe}}>
             {children}
         </CookBookContext.Provider>
     )    
