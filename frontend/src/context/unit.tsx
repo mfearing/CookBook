@@ -1,6 +1,6 @@
 import { createContext, useState, ReactNode, useCallback } from "react";
 import type UnitDetails from "../types/recipe/unitDetails";
-import useRecipeApi from "../hooks/use-recipe-api";
+import useApi from "../hooks/use-api";
 
 export interface UnitContextType {
     units: UnitDetails[] | [],
@@ -9,24 +9,26 @@ export interface UnitContextType {
     addUnit: (unit: UnitDetails) => Promise<void>
 }
 
+const uri = '/v1/rcp';
+
 const UnitContext = createContext<UnitContextType | null>(null);
 
 function UnitProvider({children}: {children: ReactNode}){
     const [units, setUnits] = useState<UnitDetails[]>([]);
-    const recipeApi = useRecipeApi();
+    const api = useApi();
 
     const fetchUnits = useCallback(async(): Promise<void> => {
         try{
-            const response = await recipeApi.get("/units");
+            const response = await api.get(`${uri}/units`);
             setUnits(response.data);
         } catch (error){
             // console.log(error);
         }
-    }, [recipeApi]);
+    }, [api]);
 
     const deleteUnit = async(id: number): Promise<void> => {
         try{
-            const response = await recipeApi.delete(`/units/${id}`);
+            const response = await api.delete(`${uri}/units/${id}`);
             if(response.status === 200){
                 const updatedUnits = units?.filter((unit) => {
                     return unit.id !== id; 
@@ -40,7 +42,7 @@ function UnitProvider({children}: {children: ReactNode}){
 
     const addUnit = async(unit: UnitDetails): Promise<void> => {
         try{
-            const response = await recipeApi.post(`/units`, unit);
+            const response = await api.post(`${uri}/units`, unit);
             if(response.status === 200){
                 const updatedUnits = [
                     ...units,

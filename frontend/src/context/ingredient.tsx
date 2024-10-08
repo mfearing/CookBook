@@ -1,6 +1,6 @@
 import { createContext, useState, ReactNode, useCallback } from "react";
 import type IngredientDetails from "../types/recipe/ingredientDetails";
-import useRecipeApi from "../hooks/use-recipe-api";
+import useApi from "../hooks/use-api";
 
 export interface IngredientContextType {
     ingredients: IngredientDetails[] | [],
@@ -9,24 +9,26 @@ export interface IngredientContextType {
     addIngredient: (ingredient: IngredientDetails) => Promise<void>
 }
 
+const uri = '/v1/rcp';
+
 const IngredientContext = createContext<IngredientContextType | null>(null);
 
 function IngredientProvider({children}: {children: ReactNode}){
     const [ingredients, setIngredients] = useState<IngredientDetails[]>([]);
-    const recipeApi = useRecipeApi();
+    const api = useApi();
 
     const fetchIngredients = useCallback(async(): Promise<void> => { //do i need to have this if the api is using useMemo?
         try{
-            const response = await recipeApi.get('/ingredients');
+            const response = await api.get(`${uri}/ingredients`);
             setIngredients(response.data);
         } catch (error) {
-            //console.log(error);
+            console.log(error);
         }
-    }, [recipeApi]); //memeoized via useMemo in the api, so can add here without causing infinite loop
+    }, [api]); //memeoized via useMemo in the api, so can add here without causing infinite loop
 
     const deleteIngredient = async(id: number): Promise<void> => {
         try{
-            const response = await recipeApi.delete(`/ingredients/${id}`);
+            const response = await api.delete(`${uri}/ingredients/${id}`);
             if(response.status === 200){
                 const updatedIngredients = ingredients?.filter((ingredient) => {
                     return ingredient.id !== id; 
@@ -34,13 +36,13 @@ function IngredientProvider({children}: {children: ReactNode}){
                 setIngredients(updatedIngredients);
             }
         }catch(error){
-            //console.log(error);        
+            console.log(error);        
         }
     };
 
     const addIngredient = async(ingredient: IngredientDetails): Promise<void> => {
         try{
-            const response = await recipeApi.post(`/ingredients`, ingredient);
+            const response = await api.post(`${uri}/ingredients`, ingredient);
             if(response.status === 200){
                 const updatedIngredients = [
                     ...ingredients,
