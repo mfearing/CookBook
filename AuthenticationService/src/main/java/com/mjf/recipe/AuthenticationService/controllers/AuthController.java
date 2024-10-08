@@ -60,6 +60,12 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/token-login")
+    public UserDTO login(){
+        //this endpoint should already be authenticated via token before it gets here
+        return userService.findByLogin(AuthUtils.getAuthenticatedUserLogin());
+    }
+
     @GetMapping("/user/{id}")
     public UserDTO getUserById(@PathVariable Long id){
         UserDTO user = userService.findById(id);

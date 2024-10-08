@@ -29,7 +29,10 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/v1/auth/**").permitAll() //open endpoints
-                        .requestMatchers("/v1/auth/user", "/v1/auth/user/**").authenticated() //authenticated endpoints
+                        .requestMatchers(
+                                "/v1/auth/user",
+                                "/v1/auth/user/**",
+                                "/v1/auth/token-login").authenticated() //authenticated endpoints
                         .anyRequest().permitAll() //any others
                 );
         return http.build();
