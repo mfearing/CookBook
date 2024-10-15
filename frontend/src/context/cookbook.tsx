@@ -1,5 +1,5 @@
 import { createContext, useState, useCallback, ReactNode } from "react";
-import useCookBookApi from "../hooks/use-cookbook-api";
+import useApi from "../hooks/use-api";
 import PublishedRecipeDetails from "../types/cookbook/publisedRecipeDetails";
 
 export interface CookBookContextType {
@@ -10,24 +10,26 @@ export interface CookBookContextType {
     clonePublishedRecipe: (id: number) => Promise<boolean>
 }
 
+const uri = '/v1/cb';
+
 const CookBookContext = createContext<CookBookContextType | null>(null);
 
 function CookBookProvider({children}: {children: ReactNode}){
     const [publishedRecipes, setPublishedRecipes] = useState<PublishedRecipeDetails[] | []>([]);
-    const cookbookApi = useCookBookApi();
+    const api = useApi();
 
     const fetchPublishedRecipes = useCallback(async(): Promise<void> => { 
         try{
-            const response = await cookbookApi.get('/published');
+            const response = await api.get(`${uri}/published`);
             setPublishedRecipes(response.data);
         } catch (error) {
             console.log(error);
         }
-    }, [cookbookApi]); //memeoized via useMemo in the api, so can add here without causing infinite loop
+    }, [api]); //memeoized via useMemo in the api, so can add here without causing infinite loop
 
     const fetchPublishedRecipesByName = async(searchTerm: string): Promise<void> => {
         try{
-            const response = await cookbookApi.get(`/published/search?searchTerm=${searchTerm}`);
+            const response = await api.get(`${uri}/published/search?searchTerm=${searchTerm}`);
             setPublishedRecipes(response.data);
         } catch(error){
             console.log(error);
@@ -36,7 +38,7 @@ function CookBookProvider({children}: {children: ReactNode}){
 
     const clonePublishedRecipe = async(id: number): Promise<boolean> => {
         try{
-            const response = await cookbookApi.get(`/published/${id}/clone`);
+            const response = await api.get(`${uri}/published/${id}/clone`);
             return response.status === 200;
         } catch(error){
             console.log(error);
@@ -46,7 +48,7 @@ function CookBookProvider({children}: {children: ReactNode}){
 
     const deletePublishedRecipe = async(id: number): Promise<void> => {
         try{
-            await cookbookApi.delete(`/published/${id}`);
+            await api.delete(`${uri}/published/${id}`);
             //not sure i like this fix...should be re-fetching in case the delete fails.
             setPublishedRecipes(publishedRecipes.filter(item => item.id !== id));
         } catch(error){

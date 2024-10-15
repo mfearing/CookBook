@@ -7,6 +7,7 @@ import axios from "axios";
 export interface AuthContextType {
     userLogin: UserDetails | null;
     getAuthByLogin: (login: LoginDetails) => Promise<UserDetails | void>;
+    getAuthByToken: (token: string) => Promise<UserDetails | void>;
     registerNewLogin: (signUpDetails: SignUpDetails) => Promise<UserDetails | void>;
     patchUserLogin: (data: UserDetails) => Promise<UserDetails | void>;
     logUserOut: () => void;
@@ -14,14 +15,16 @@ export interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+const baseURL = 'http://localhost:8081/v1/auth';
+
 //Use this provider to handle authentication to the application and pass that auth down to components
 function AuthProvider({children}: {children: ReactNode}) {
-    const [userLogin, setUserLogin] = useState<null | UserDetails>(null);
+    const [userLogin, setUserLogin] = useState<UserDetails | null>(null);
 
-    //api - couldn't separate this out without circular dependency?
+    //api - couldn't separate this out without circular dependency (setUserLogin())?
     const api = useMemo(() => { //useMemo will memoize all method calls
         const instance = axios.create({
-            baseURL: 'http://localhost:8081/v1/auth'
+            baseURL
         });
     
         instance.interceptors.request.use((config) => {
@@ -42,7 +45,6 @@ function AuthProvider({children}: {children: ReactNode}) {
                 }
                 return Promise.reject(error);
             }
-    
         );
     
         return instance;
@@ -53,15 +55,43 @@ function AuthProvider({children}: {children: ReactNode}) {
         try{
             const response = await api.post("/login", loginDetails);
             setUserLogin(response.data);
+            sessionStorage.setItem('token', response.data.token);
         } catch (error){
             console.error("Failed to authenticate");
         }
     };
 
+    const getAuthByToken = async (token: string): Promise<UserDetails | void> => {
+        try{
+            //token gotten from session storage, so not using api to set token header
+            const response = await axios.get(`${baseURL}/token-login`, {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                    Accept: 'application/json'
+                }
+            });
+
+            //make sure stored token gets added
+            const details: UserDetails = {
+                ...response.data,
+                token: token
+            }; 
+
+            //set user details
+            setUserLogin(details);
+
+        } catch(error){
+            // clear session storage and user details if token fails to log user in
+            sessionStorage.removeItem('token');
+            setUserLogin(null);
+        }
+    }
+
     const registerNewLogin = async (signUpDetails: SignUpDetails): Promise<UserDetails | void> => {
         try{
             const response = await api.post("/register", signUpDetails);
             setUserLogin(response.data);
+            sessionStorage.setItem('token', response.data.token);
         } catch(error){
             console.error("Failed to authenticate");
         }
@@ -81,11 +111,12 @@ function AuthProvider({children}: {children: ReactNode}) {
 
     const logUserOut = async() => {
         await api.post(`/logout`);
+        sessionStorage.removeItem('token');
         setUserLogin(null);
     };
 
     return (
-        <AuthContext.Provider value={{userLogin, getAuthByLogin, registerNewLogin, patchUserLogin, logUserOut}}>
+        <AuthContext.Provider value={{userLogin, getAuthByLogin, getAuthByToken, registerNewLogin, patchUserLogin, logUserOut}}>
             {children}
         </AuthContext.Provider>
     );

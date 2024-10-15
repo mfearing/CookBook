@@ -2,12 +2,12 @@ import { useMemo } from "react";
 import axios from "axios";
 import useAuthContext from "./use-auth-context";
 
-export default function useRecipeApi() {
+export default function useApi() {
     const authContext = useAuthContext();
 
     const api = useMemo(() => { //useMemo will memoize all method calls
         const instance = axios.create({
-            baseURL: 'http://localhost:8081/v1/rcp'
+            baseURL: 'http://localhost:8081'
         });
 
         instance.interceptors.request.use((config) => {
@@ -35,5 +35,4 @@ export default function useRecipeApi() {
     }, [authContext]);
 
     return api;
-
 }
