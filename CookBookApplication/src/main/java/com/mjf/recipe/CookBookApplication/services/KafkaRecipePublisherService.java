@@ -3,7 +3,7 @@ package com.mjf.recipe.CookBookApplication.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mjf.recipe.CookBookApplication.config.KafkaConfigProps;
-import com.mjf.recipe.CookBookApplication.dtos.ClonedPublishedRecipeDTO;
+import com.mjf.recipe.CookBookApplication.dtos.ClonedPublishedRecipe;
 import com.mjf.recipe.CookBookApplication.exceptions.AppException;
 import lombok.AllArgsConstructor;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -24,7 +24,7 @@ public class KafkaRecipePublisherService implements PublishedRecipeCloneService 
     private final KafkaConfigProps kafkaConfigProps;
 
     @Override
-    public void publish(ClonedPublishedRecipeDTO recipe) {
+    public void publish(ClonedPublishedRecipe recipe) {
         try {
             final String payload = objectMapper.writeValueAsString(recipe);
             logger.info(String.valueOf(recipe));

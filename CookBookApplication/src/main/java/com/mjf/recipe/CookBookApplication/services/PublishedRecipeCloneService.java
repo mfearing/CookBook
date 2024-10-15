@@ -1,9 +1,9 @@
 package com.mjf.recipe.CookBookApplication.services;
 
-import com.mjf.recipe.CookBookApplication.dtos.ClonedPublishedRecipeDTO;
+import com.mjf.recipe.CookBookApplication.dtos.ClonedPublishedRecipe;
 
 public interface PublishedRecipeCloneService {
 
-    void publish(ClonedPublishedRecipeDTO publishedRecipeDto);
+    void publish(ClonedPublishedRecipe publishedRecipeDto);
 
 }
