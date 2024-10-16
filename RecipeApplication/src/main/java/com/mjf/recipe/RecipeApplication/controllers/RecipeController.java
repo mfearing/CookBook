@@ -1,6 +1,6 @@
 package com.mjf.recipe.RecipeApplication.controllers;
 
-import com.mjf.recipe.RecipeApplication.dtos.RecipeSummaryDTO;
+import com.mjf.recipe.RecipeApplication.dtos.RecipeSummaryResponse;
 import com.mjf.recipe.RecipeApplication.entities.Recipe;
 import com.mjf.recipe.RecipeApplication.entities.RecipeIngredient;
 import com.mjf.recipe.RecipeApplication.exceptions.AppException;
@@ -34,10 +34,10 @@ public class RecipeController {
     }
 
     @GetMapping("/summary")
-    public List<RecipeSummaryDTO> getSummaryRecipes(){
+    public List<RecipeSummaryResponse> getSummaryRecipes(){
         return recipeService.findByAuthor(RecipeUtils.getAuthenticatedUserLogin())
                 .stream()
-                .map(recipe -> new RecipeSummaryDTO(recipe.getId(), recipe.getName()))
+                .map(recipe -> new RecipeSummaryResponse(recipe.getId(), recipe.getName()))
                 .toList();
     }
 

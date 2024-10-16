@@ -6,7 +6,6 @@ import com.mjf.recipe.RecipeApplication.dtos.ClonedRecipeDTO;
 import com.mjf.recipe.RecipeApplication.entities.Recipe;
 import com.mjf.recipe.RecipeApplication.entities.RecipeIngredient;
 import com.mjf.recipe.RecipeApplication.exceptions.AppException;
-import com.mjf.recipe.RecipeApplication.services.IngredientService;
 import com.mjf.recipe.RecipeApplication.services.RecipeIngredientService;
 import com.mjf.recipe.RecipeApplication.services.RecipeService;
 import lombok.AllArgsConstructor;
@@ -31,7 +30,6 @@ public class ClonedRecipeListener {
     private final ObjectMapper objectMapper;
     private final RecipeService recipeService;
     private final RecipeIngredientService recipeIngredientService;
-    private final IngredientService ingredientService;
 
     @KafkaListener(topics = "recipe.clone")
     public String listens(String in){
@@ -40,10 +38,10 @@ public class ClonedRecipeListener {
 
             ClonedRecipeDTO clone = objectMapper.readValue(in, ClonedRecipeDTO.class);
             Recipe clonedRecipe = Recipe.builder()
-                    .name("Cloned " + clone.getRecipeData().getName())
-                    .instructions(clone.getRecipeData().getInstructions())
-                    .description(clone.getRecipeData().getDescription())
-                    .author(clone.getLogin()) //NOT FROM THE RECIPE DATA!!! that's the old author
+                    .name("Cloned " + clone.recipeData().getName())
+                    .instructions(clone.recipeData().getInstructions())
+                    .description(clone.recipeData().getDescription())
+                    .author(clone.login()) //NOT FROM THE RECIPE DATA!!! that's the old author
                     .build();
 
             //cannot save recipe ingredients without getting the new recipe id, so we save that first
@@ -51,7 +49,7 @@ public class ClonedRecipeListener {
 
             //TODO: Bug here if the ingredient or unit no longer exists in the database!
             recipeIngredientService.saveAll(
-                pruneRecipeIngredientIDs(clone.getRecipeData().getRecipeIngredients(), newRecipe.getId())
+                pruneRecipeIngredientIDs(clone.recipeData().getRecipeIngredients(), newRecipe.getId())
             );
 
         } catch (final JsonProcessingException e) {
