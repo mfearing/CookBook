@@ -44,7 +44,7 @@ public class RoutesConfig {
                                         .setKeyResolver(ipKeyResolver())
                                 )
                         )
-                        .uri("http://cookbookapplication:8383") // the cookbook service port
+                        .uri("http://cookbookapplication:8080") // the cookbook service port
                 )
 
                 .build();

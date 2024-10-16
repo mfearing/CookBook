@@ -77,6 +77,8 @@ services:
       SPRING_PROFILES_ACTIVE: 'production'
       DEVITRO_KAFKA_CLONE_TOPIC: 'recipe.clone'
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+      MONGODB_USERNAME: mongoSA
+      MONGODB_PASSWORD: mongoSA
 
   #GatewayService
   gatewayservice:
