@@ -8,7 +8,7 @@ public class RecipeUtils {
     public static String getAuthenticatedUserLogin(){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(principal instanceof UserDTO){
-            return ((UserDTO) principal).getLogin();
+            return ((UserDTO) principal).login();
         }
         return null;
     }

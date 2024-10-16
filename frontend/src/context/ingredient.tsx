@@ -43,7 +43,7 @@ function IngredientProvider({children}: {children: ReactNode}){
     const addIngredient = async(ingredient: IngredientDetails): Promise<void> => {
         try{
             const response = await api.post(`${uri}/ingredients`, ingredient);
-            if(response.status === 200){
+            if(response.status === 201){
                 const updatedIngredients = [
                     ...ingredients,
                     response.data
