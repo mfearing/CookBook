@@ -1,5 +1,7 @@
 package com.mjf.recipe.RecipeApplication.services;
 
+import com.mjf.recipe.RecipeApplication.dtos.UnitRequest;
+import com.mjf.recipe.RecipeApplication.dtos.UnitResponse;
 import com.mjf.recipe.RecipeApplication.entities.Unit;
 import com.mjf.recipe.RecipeApplication.exceptions.AppException;
 import com.mjf.recipe.RecipeApplication.repositories.UnitRepository;
@@ -12,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
@@ -26,31 +26,45 @@ public class UnitService {
     @Autowired
     private UnitRepository unitRepository;
 
-    public List<Unit> findAll(){
-        return unitRepository.findAll();
+    public List<UnitResponse> findAll(){
+        List<Unit> units = unitRepository.findAll();
+        return units.stream().map(unit -> new UnitResponse(unit.getId(), unit.getName())).toList();
     }
 
-    public Optional<Unit> findById(Long id){
-        return unitRepository.findById(id);
+    public UnitResponse findById(Long id){
+        Optional<Unit> unit = unitRepository.findById(id);
+        return unit.map(value -> new UnitResponse(value.getId(), value.getName())).orElse(null);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public Unit save(Unit unit){
-        if(unitRepository.findByName(unit.getName()).isPresent()){
-            throw new AppException("Unit " + unit.getName() + " already exists", HttpStatus.BAD_REQUEST);
+    public UnitResponse save(UnitRequest unitRequest){
+        if(unitRepository.findByName(unitRequest.name()).isPresent()){
+            throw new AppException("Unit " + unitRequest.name() + " already exists", HttpStatus.BAD_REQUEST);
         }
-        return unitRepository.save(unit);
+        Unit unit = unitRepository.save(new Unit(null, unitRequest.name()));
+        return new UnitResponse(unit.getId(), unit.getName());
     }
 
     @Transactional
-    public List<Unit> saveAll(List<Unit> units){
-        List<String> namesToCreate = units.stream().map(Unit::getName).toList();
-        List<Unit> existingUnits = unitRepository.findAllByNameIn(namesToCreate);
-        Set<String> existingUnitNames = existingUnits.stream().map(Unit::getName).collect(Collectors.toSet());
-        List<Unit> filteredUnitsToCreate = units.stream().filter(
-                unit -> !existingUnitNames.contains(unit.getName())
-        ).toList();
-        return unitRepository.saveAll(filteredUnitsToCreate);
+    public List<UnitResponse> saveAll(List<UnitRequest> unitRequests){
+        // Convert UnitRequests to a Map of name to Unit
+        Map<String, Unit> unitMap = unitRequests.stream()
+                .collect(Collectors.toMap(
+                        UnitRequest::name,
+                        req -> new Unit(null, req.name()),
+                        (existing, replacement) -> existing //keep existing if duplicate value
+                ));
+        List<Unit> existingUnits = unitRepository.findAllByNameIn(unitMap.keySet().stream().toList());
+        existingUnits.forEach(unit -> unitMap.remove(unit.getName()));
+
+        List<Unit> createdUnits = unitRepository.saveAll(unitMap.values());
+
+        List<Unit> allUnits = new ArrayList<>(existingUnits);
+        allUnits.addAll(createdUnits);
+
+        return allUnits.stream()
+                .map(unit -> new UnitResponse(unit.getId(), unit.getName()))
+                .collect(Collectors.toList());
     }
 
     @Transactional

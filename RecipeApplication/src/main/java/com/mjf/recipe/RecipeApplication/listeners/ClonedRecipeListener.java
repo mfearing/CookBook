@@ -2,7 +2,7 @@ package com.mjf.recipe.RecipeApplication.listeners;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mjf.recipe.RecipeApplication.dtos.ClonedRecipeDTO;
+import com.mjf.recipe.RecipeApplication.dtos.ClonedRecipeRequest;
 import com.mjf.recipe.RecipeApplication.entities.Recipe;
 import com.mjf.recipe.RecipeApplication.entities.RecipeIngredient;
 import com.mjf.recipe.RecipeApplication.exceptions.AppException;
@@ -36,7 +36,7 @@ public class ClonedRecipeListener {
         logger.info(in);
         try{
 
-            ClonedRecipeDTO clone = objectMapper.readValue(in, ClonedRecipeDTO.class);
+            ClonedRecipeRequest clone = objectMapper.readValue(in, ClonedRecipeRequest.class);
             Recipe clonedRecipe = Recipe.builder()
                     .name("Cloned " + clone.recipeData().getName())
                     .instructions(clone.recipeData().getInstructions())

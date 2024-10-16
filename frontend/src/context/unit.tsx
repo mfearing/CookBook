@@ -36,14 +36,14 @@ function UnitProvider({children}: {children: ReactNode}){
                 setUnits(updatedUnits);
             }
         }catch(error){
-            //console.log(error);
+            console.log(error);
         }
     };
 
     const addUnit = async(unit: UnitDetails): Promise<void> => {
         try{
             const response = await api.post(`${uri}/units`, unit);
-            if(response.status === 200){
+            if(response.status === 201){
                 const updatedUnits = [
                     ...units,
                     response.data
@@ -51,7 +51,7 @@ function UnitProvider({children}: {children: ReactNode}){
                 setUnits(updatedUnits);
             }
         } catch (error){
-            //console.log(error);
+            console.log(error);
         }
     }
 
