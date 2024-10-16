@@ -3,8 +3,8 @@ package com.mjf.recipe.CookBookApplication.listeners;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mjf.recipe.CookBookApplication.entities.PublishedRecipe;
 import com.mjf.recipe.CookBookApplication.exceptions.AppException;
+import com.mjf.recipe.CookBookApplication.model.PublishedRecipe;
 import com.mjf.recipe.CookBookApplication.services.PublishedRecipeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class RecipePublishedListener {
                 //If recipe is already published, update properties and save
                 PublishedRecipe existingPR = existing.get();
                 existingPR.setName(name);
-                existingPR.setRecipeData(in);
+                existingPR.setRecipeData(readJsonAsMap(in));
                 publishedRecipeService.save(existingPR);
             }
 
@@ -65,13 +65,13 @@ public class RecipePublishedListener {
         return objectMapper.readValue(json, typeRef);
     }
 
-    private PublishedRecipe publishedRecipeFromPayload(Long recipeId, String name, String author, String in){
+    private PublishedRecipe publishedRecipeFromPayload(Long recipeId, String name, String author, String in) throws JsonProcessingException {
 
         return PublishedRecipe.builder()
                 .recipeId(recipeId)
                 .name(name)
                 .author(author)
-                .recipeData(in)
+                .recipeData(readJsonAsMap(in))
                 .build();
     }
 

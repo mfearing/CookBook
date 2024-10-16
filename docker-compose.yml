@@ -22,6 +22,19 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
+  #mongoDB
+  mongodb:
+    image: mongo:7.0.5
+    container_name: cookbook-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoSA
+      MONGO_INITDB_ROOT_PASSWORD: mongoSA
+      MONGO_INITDB_DATABASE: cookbookdb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
   #Redis
   redis:
     container_name: redis
@@ -57,12 +70,15 @@ services:
     container_name: cookbookapplication
     depends_on:
       - broker
+      - mongodb
     expose:
       - "8383"
     environment:
       SPRING_PROFILES_ACTIVE: 'production'
       DEVITRO_KAFKA_CLONE_TOPIC: 'recipe.clone'
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+      MONGODB_USERNAME: mongoSA
+      MONGODB_PASSWORD: mongoSA
 
   #GatewayService
   gatewayservice:
@@ -79,3 +95,7 @@ services:
       SPRING_PROFILES_ACTIVE: 'production'
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
+
+volumes:
+  mongo-data:
+    driver: local

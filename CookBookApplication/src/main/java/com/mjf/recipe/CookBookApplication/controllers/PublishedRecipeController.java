@@ -1,7 +1,7 @@
 package com.mjf.recipe.CookBookApplication.controllers;
 
-import com.mjf.recipe.CookBookApplication.dtos.ClonedPublishedRecipeDTO;
-import com.mjf.recipe.CookBookApplication.dtos.PublishedRecipeDTO;
+import com.mjf.recipe.CookBookApplication.dtos.ClonedPublishedRecipe;
+import com.mjf.recipe.CookBookApplication.dtos.PublishedRecipeResponse;
 import com.mjf.recipe.CookBookApplication.exceptions.AppException;
 import com.mjf.recipe.CookBookApplication.services.KafkaRecipePublisherService;
 import com.mjf.recipe.CookBookApplication.services.PublishedRecipeService;
@@ -24,42 +24,41 @@ public class PublishedRecipeController {
     private KafkaRecipePublisherService kafkaRecipePublisherService;
 
     @GetMapping
-    public List<PublishedRecipeDTO> getAllPublishedRecipes(){
-        return publishedRecipeService.getPublishedRecipeDTOs();
+    @ResponseStatus(HttpStatus.OK)
+    public List<PublishedRecipeResponse> getAllPublishedRecipes(){
+        return publishedRecipeService.getPublishedRecipes();
     }
 
     @GetMapping("/{id}")
-    public PublishedRecipeDTO getPublishedRecipeById(@PathVariable long id){
-        return publishedRecipeService.findPublishedRecipeDTOById(id);
+    @ResponseStatus(HttpStatus.OK)
+    public PublishedRecipeResponse getPublishedRecipeById(@PathVariable String id){
+        return publishedRecipeService.findPublishedRecipeById(id);
     }
 
     @DeleteMapping("/{id}")
-    public PublishedRecipeDTO deletePublishedRecipeById(@PathVariable long id){
+    @ResponseStatus(HttpStatus.OK)
+    public void deletePublishedRecipeById(@PathVariable String id){
         if(CookBookUtils.isAuthenticatedUserAdmin()){
-            PublishedRecipeDTO publishedRecipeDTO = publishedRecipeService.findPublishedRecipeDTOById(id);
-            if(publishedRecipeDTO != null){
+            PublishedRecipeResponse publishedRecipeResponse = publishedRecipeService.findPublishedRecipeById(id);
+            if(publishedRecipeResponse != null) {
                 publishedRecipeService.deleteById(id);
-                return publishedRecipeDTO;
-            } else {
-                throw new AppException("Published Recipe not found.", HttpStatus.FORBIDDEN);
             }
-        } else {
-            throw new AppException("Insufficient permissions to delete published recipe", HttpStatus.FORBIDDEN);
         }
     }
 
     @GetMapping("/{id}/clone")
-    public void clonePublishedRecipe(@PathVariable long id){
-        PublishedRecipeDTO recipe = publishedRecipeService.findPublishedRecipeDTOById(id);
+    @ResponseStatus(HttpStatus.OK)
+    public void clonePublishedRecipe(@PathVariable String id){
+        PublishedRecipeResponse recipe = publishedRecipeService.findPublishedRecipeById(id);
         //user must be authenticated to clone recipe into their account
         String author = CookBookUtils.getAuthenticatedUserLogin();
         if(recipe != null && author != null && !author.isEmpty()) {
             kafkaRecipePublisherService.publish(
-                ClonedPublishedRecipeDTO.builder()
-                    .id(recipe.getId())
-                    .login(author)
-                    .recipeData(recipe.getRecipeData())
-                    .build()
+                    new ClonedPublishedRecipe(
+                            recipe.id(),
+                            author,
+                            recipe.recipeData()
+                    )
             );
         } else {
             throw new AppException("Must be authenticated to clone a recipe", HttpStatus.BAD_REQUEST);
@@ -67,8 +66,9 @@ public class PublishedRecipeController {
     }
 
     @GetMapping("/search")
-    public List<PublishedRecipeDTO> getAllPublishedRecipes(@RequestParam("searchTerm") @NotBlank String searchTerm){
-        return publishedRecipeService.getPublishedRecipeDTOsByNameContaining(searchTerm);
+    @ResponseStatus(HttpStatus.OK)
+    public List<PublishedRecipeResponse> getAllPublishedRecipesBySearchTerm(@RequestParam("searchTerm") @NotBlank String searchTerm){
+        return publishedRecipeService.getPublishedRecipeByNameContaining(searchTerm);
     }
 
 

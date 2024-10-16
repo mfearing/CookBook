@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ClonedRecipeDTO {
-    private Long id;
+    private String id;
     private String login;
     private Recipe recipeData;
 }

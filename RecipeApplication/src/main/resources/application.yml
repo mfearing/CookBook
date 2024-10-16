@@ -18,7 +18,3 @@ spring:
 server:
   servlet:
     context-path: /v1/rcp
-
-auth:
-  service:
-    url: http://authenticationservice:8080 #change to ip from localhost so container doesn't get confused
