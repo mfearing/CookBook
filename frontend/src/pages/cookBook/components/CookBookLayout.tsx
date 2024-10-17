@@ -38,7 +38,10 @@ export default function CookBookLayout() {
     }
 
     const handleDeleteClick = async (id: number) => {
-        deletePublishedRecipe(id);
+        const confirmDelete = window.confirm("Would you like to permanently delete this recipe from the CookBook?");
+        if(confirmDelete){
+            deletePublishedRecipe(id);
+        }
     }
 
     const cards = publishedRecipes.map((pr) => {

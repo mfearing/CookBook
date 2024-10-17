@@ -1,6 +1,6 @@
-import { Card, CardActionArea, CardActions, CardContent, CardHeader, IconButton, Tooltip, Typography } from "@mui/material";
+import { Card, CardContent, CardHeader, IconButton, Tooltip, Typography } from "@mui/material";
 import useAuthContext from "../../../hooks/use-auth-context";
-import { Delete } from "@mui/icons-material";
+import { Article, Delete } from "@mui/icons-material";
 import { AuthContextType } from "../../../context/auth";
 
 export interface CookBookRecipeCardProps {
@@ -18,30 +18,35 @@ export default function CookBookRecipeCard({id, author, name, description, handl
     
     const isAdmin = userLogin?.role === 'ADMIN';
 
-    const deleteButton = (    
-        <CardActions>
-            <Tooltip title="Delete Recipe">
-                <IconButton onClick={() => handleDelete(id)} color='warning' disabled={!isAdmin} >
-                    <Delete />
+    const prButtons = (    
+        <>
+            <Tooltip title="View Recipe">
+                <IconButton onClick={() => handleClick(id)} color='info' >
+                    <Article />
                 </IconButton>
             </Tooltip>
-        </CardActions>
+            {isAdmin &&
+                <Tooltip title="Delete Recipe">
+                    <IconButton onClick={() => handleDelete(id)} color='warning' disabled={!isAdmin} >
+                        <Delete />
+                    </IconButton>
+                </Tooltip>
+            }
+        </>
     );
 
     return (
         <Card variant="outlined" style={{height: '11vw'}}>
-            <CardActionArea onClick={() => handleClick(id)}>
-                <CardHeader
+            <CardHeader
                     id={id}
                     title={name}
                     subheader={`Author: ${author}`}
+                    action = {prButtons}
                 />
-                <CardContent>
-                    <Typography>Description: </Typography>
-                    <Typography>{description}</Typography>
-                </CardContent>
-            </CardActionArea>
-            {isAdmin && deleteButton}
+            <CardContent>
+                <Typography>Description: </Typography>
+                <Typography>{description}</Typography>
+            </CardContent>
         </Card>
     )
 }

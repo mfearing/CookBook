@@ -5,7 +5,7 @@ import { IngredientContextType } from "../../../context/ingredient";
 import { Box, Grid, IconButton, Tooltip } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import IngredientDetails from "../../../types/recipe/ingredientDetails";
-import DataTable, { DataGridRow } from "./DataTable";
+import DataTable, { DataGridRow } from "../../../component/DataTable";
 import AddRowForm from "./AddRowForm";
 
 export default function IngredientDataTable(){

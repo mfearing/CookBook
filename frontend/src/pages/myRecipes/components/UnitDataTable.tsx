@@ -5,7 +5,7 @@ import { UnitContextType } from "../../../context/unit";
 import { Grid, IconButton, Tooltip } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import UnitDetails from "../../../types/recipe/unitDetails";
-import DataTable, { DataGridRow } from "./DataTable";
+import DataTable, { DataGridRow } from "../../../component/DataTable";
 import AddRowForm from "./AddRowForm";
 
 export default function UnitDataTable(){

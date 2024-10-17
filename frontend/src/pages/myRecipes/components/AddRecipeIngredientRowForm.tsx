@@ -25,10 +25,9 @@ export default function AddRecipeIngredientRowForm({handleRecipeIngredientCreate
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const val = event.target.value;
-        if((val === '' || /^[0-9\b.]+$/.test(val))){
-            if(val.split('.').length <= 2){
-                setQuantity(val);
-            }
+        //whole number or decimal to two decimal points
+        if (val === '' || /^[0-9]+$/.test(val) || /^[0-9]+\.[0-9]{0,2}$/.test(val)) {
+            setQuantity(val);
         }
     }
 

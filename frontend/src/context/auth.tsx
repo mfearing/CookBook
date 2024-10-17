@@ -43,7 +43,7 @@ function AuthProvider({children}: {children: ReactNode}) {
                     alert("Your user session has expired, please log in.");
                     setUserLogin(null);
                 }
-                return Promise.reject(error);
+                //return Promise.reject(error);
             }
         );
     

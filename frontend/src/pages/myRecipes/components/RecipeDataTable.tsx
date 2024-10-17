@@ -5,7 +5,7 @@ import RecipeDetails from "../../../types/recipe/recipeDetails";
 import RecipeDropdown from "./RecipeDropdown";
 import { Box, Grid, IconButton, Stack, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable, { DataGridRow } from "./DataTable";
+import DataTable, { DataGridRow } from "../../../component/DataTable";
 import DescriptionCard from "./DescriptionCard";
 import AddRecipeIngredientRowForm from "./AddRecipeIngredientRowForm";
 import { Delete, Add, MenuBook } from "@mui/icons-material";
@@ -86,14 +86,18 @@ export default function RecipeDataTable(){
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="Publish to CookBook">
+                    <span>
                     <IconButton onClick={handlePublishRecipe} color='primary' disabled={!recipe} >
                         <MenuBook />
                     </IconButton>
+                    </span>
                 </Tooltip>
                 <Tooltip title="Delete Recipe">
+                    <span>
                     <IconButton onClick={handleRecipeDelete} color='warning' disabled={!recipe} >
                         <Delete />
                     </IconButton>
+                    </span>
                 </Tooltip>
             </Box>
         </Box>

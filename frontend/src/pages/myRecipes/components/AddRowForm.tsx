@@ -26,7 +26,8 @@ export default function AddRowForm({handleSubmit, label}: AddRowFormProps){
                 gap: 2,
                 width: '100%',
                 maxWidth: 400,
-                mt: 2,
+                mt: 3,
+                alignItems: 'center',
             }}
         >
             <FormControl fullWidth>
