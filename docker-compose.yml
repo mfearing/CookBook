@@ -1,4 +1,16 @@
 services:
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: backend
+      POSTGRES_PASSWORD: backend
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
@@ -33,7 +45,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongo-data:/data/db
+      - mongo-data:/var/lib/mongodb/data
 
   #Redis
   redis:
@@ -97,5 +109,6 @@ services:
       SPRING_REDIS_PORT: 6379
 
 volumes:
+  postgres_data:
   mongo-data:
     driver: local
