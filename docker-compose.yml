@@ -3,13 +3,19 @@ services:
   postgres:
     image: postgres:17-alpine
     container_name: postgres
+    environment:
+      POSTGRES_USER: backend
+      POSTGRES_PASSWORD: backend
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: backend
-      POSTGRES_PASSWORD: backend
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0

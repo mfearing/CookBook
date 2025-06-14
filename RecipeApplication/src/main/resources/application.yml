@@ -2,7 +2,7 @@ spring:
   datasource:
     platform: postgres
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/recipedb
+    url: jdbc:postgresql://localhost:5432/backend?currentSchema=recipedb
     username: backend
     password: backend
     initialization-mode: always

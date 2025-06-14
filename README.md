@@ -1,6 +1,13 @@
 # CookBook
 This web application uses microservices to build recipes.  Java 17, Spring Framework/Spring Boot, PostgreSQL, React,
-Docker, and Kafka Message Broker were used to build this.
+Docker, Maven, Redis, MongoDB, and Kafka Message Broker were used to build this.
+
+## Building
+Step 1: [build the RSA certs](#generating-rsa256-public-and-private-keys) and place them into the 
+Authentication Service.
+
+Step 2:
+```docker compose up -d --build```
 
 ## Gateway
 Spring Cloud Gateway that acts as a single point of contact for requests from the client to the services that
@@ -8,7 +15,7 @@ are behind it.  Gateway also handles JWT verification, passing header values for
 as necessary.
 
 ## AuthenticationService
-AuthenticationService application is based on Sergio Lema's authentication backend, with minor changes.  
+AuthenticationService application is based on Sergio Lema's authentication backend, with additional changes.  
 This application performs user logins, registration, and creation of JWT tokens.  You can
 view Sergio's code here:
 
@@ -34,6 +41,4 @@ openssl rsa -in keypair.pem -pubout -out publicKey.pem
 
 openssl pkcs8 -in keypair.pem -topk8 -nocrypt -inform PEM -outform PEM -out privateKey.pem
 
-
-¯\_(ツ)_/¯
 
