@@ -1,4 +1,22 @@
 services:
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: backend
+      POSTGRES_PASSWORD: backend
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
@@ -33,7 +51,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongo-data:/data/db
+      - mongo-data:/var/lib/mongodb/data
 
   #Redis
   redis:
@@ -44,35 +62,38 @@ services:
 
   #AuthService
   authenticationservice:
-    build: ./AuthenticationService
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: authenticationservice
     container_name: authenticationservice
-    expose:
-      - "8181"
     environment:
-      SPRING_PROFILES_ACTIVE: 'production'
+      SPRING_PROFILES_ACTIVE: 'production,docker'
 
   #RecipeApplication
   recipeservice:
-    build: ./RecipeApplication
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: recipeapplication
     container_name: recipeapplication
     depends_on:
       - broker
-    expose:
-      - "8282"
     environment:
-      SPRING_PROFILES_ACTIVE: 'production'
+      SPRING_PROFILES_ACTIVE: 'production,docker'
       DEVTIRO_KAFKA_TOPIC: 'recipe.published'
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
 
   #CookBookApplication
   cookbookapplication:
-    build: ./CookBookApplication
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cookbookapplication
     container_name: cookbookapplication
     depends_on:
       - broker
       - mongodb
-    expose:
-      - "8383"
     environment:
       SPRING_PROFILES_ACTIVE: 'production'
       DEVITRO_KAFKA_CLONE_TOPIC: 'recipe.clone'
@@ -82,7 +103,10 @@ services:
 
   #GatewayService
   gatewayservice:
-    build: ./Gateway
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: gateway
     container_name: gateway
     depends_on:
       - redis
@@ -97,5 +121,6 @@ services:
       SPRING_REDIS_PORT: 6379
 
 volumes:
+  postgres_data:
   mongo-data:
     driver: local
