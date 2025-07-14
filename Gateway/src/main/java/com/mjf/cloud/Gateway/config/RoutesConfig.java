@@ -16,38 +16,37 @@ public class RoutesConfig {
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder){
         return builder.routes()
-                .route(p -> p
-                        .path("/v1/auth/**")
-                        .filters(f -> f
-                                .requestRateLimiter(c -> c
-                                        .setRateLimiter(redisRateLimiter())
-                                        .setKeyResolver(ipKeyResolver())
-                                )
+            .route(p -> p
+                .path("/v1/auth/**")
+                .filters(f -> f
+                        .requestRateLimiter(c -> c
+                                .setRateLimiter(redisRateLimiter())
+                                .setKeyResolver(ipKeyResolver())
                         )
-                        .uri("http://authenticationservice:8080") // the authentication service port
                 )
-                .route(p -> p
-                        .path("/v1/rcp/**")
-                        .filters(f -> f
-                                .requestRateLimiter(c -> c
-                                        .setRateLimiter(redisRateLimiter())
-                                        .setKeyResolver(ipKeyResolver())
-                                )
+                .uri("http://authenticationservice:8080") // the authentication service port
+            )
+            .route(p -> p
+                .path("/v1/rcp/**")
+                .filters(f -> f
+                        .requestRateLimiter(c -> c
+                                .setRateLimiter(redisRateLimiter())
+                                .setKeyResolver(ipKeyResolver())
                         )
-                        .uri("http://recipeservice:8080") // the recipe service port
                 )
-                .route(p -> p
-                        .path("/v1/cb/**")
-                        .filters(f -> f
-                                .requestRateLimiter(c -> c
-                                        .setRateLimiter(redisRateLimiter())
-                                        .setKeyResolver(ipKeyResolver())
-                                )
+                .uri("http://recipeservice:8080") // the recipe service port
+            )
+            .route(p -> p
+                .path("/v1/cb/**")
+                .filters(f -> f
+                        .requestRateLimiter(c -> c
+                                .setRateLimiter(redisRateLimiter())
+                                .setKeyResolver(ipKeyResolver())
                         )
-                        .uri("http://cookbookapplication:8080") // the cookbook service port
                 )
-
-                .build();
+                .uri("http://cookbookapplication:8080") // the cookbook service port
+            )
+            .build();
     }
 
     @Bean
